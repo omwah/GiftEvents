@@ -1,0 +1,37 @@
+main: com.github.omwah.giftevents.GiftEvents
+name: ${project.name}
+version: ${project.version}
+author: Omwah
+description: ${project.description}
+commands:
+  birthday:
+    description: Modify or see birthday 
+    aliases: [bday]
+    usage: /birthday ? - For more information
+  anniversary:
+    description: See player's first join anniversary date
+    aliases: [anniv]
+    usage: /anniversary ? - For more information
+  events:
+    description: See a list of global gift dates
+    usage: /events ?  - For more information
+permissions:
+  giftevents.*:
+    description: Give access to all GiftEvents commands 
+    children:
+      giftevents.birthday: true
+      giftevents.anniversary: true
+      giftevents.events: true
+      giftevents.admin: true
+  giftevents.birthday
+    description: Allow access to birthday commands and functionality
+    default: true
+  giftevents.anniversary
+    description: Allow access to anniversary commands and functionality
+    default: true
+  giftevents.events
+    description: Allow access to events commands and functionality
+    default: true
+  giftevents.admin:
+    description: Allow access to administration commands
+    default: op

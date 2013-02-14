@@ -1,0 +1,80 @@
+# Announcement and gift messages are formatted with the Java String Formatter
+# And passed player_name, Calendar date
+
+# For each type of event a gift can be configured through the gift: section
+# with the following properties:
+# enabled - Is the gift given 
+# belated - Is the gift given after the event has passed
+# id - Item id to be put in player's inventory
+# enchantments - Enchantment ids to be applied to gift item
+# name - Name to give to gift, as if applied by an anvil
+
+# The birthday: and anniversary: are special in that they are based on
+# dates stored in server data and make server wide announcements.
+
+# The accountment section for birthday and anniversary: have these options:
+# enabled - Whether or not to make an annoucement whenever the player joins
+# on the day in question.
+# message - The message that will be broadcast
+# max_num - How many times in one day the message will be broadcast before
+# stopping. So if a player logs on and off several times, the annoucement
+# only happens this number of times. And only if the last message was made
+# annoucment_interval minutes previously
+
+# Time in minutes between annoucements should a player log off then back on
+annoucment_interval: 30
+
+birthday:
+  announcement:
+    enabled: True 
+    message: "Today is %1$s's birthday!"
+    max_num: 5
+
+  gift:
+    enabled: True
+    belated: True
+    id: 354 # Cake 
+    enchantments: [35] # Fortune
+    name: "Happy Birthday!"
+    message: "Happy Birthday %1$s, check your inventory for a gift"
+
+anniversary:
+  apnnouncement:
+    enabled: True 
+    message: "Today is %1$s's sever join anniversary. Player since %2$tm %2$te,%2$tY"
+    max_num: 5
+
+  gift:
+    enabled: True
+    belated: True
+    id: 264 # Diamond
+    enchantments: [48] # Power
+    name: "Happy Anniversary!"
+    message: "Happy Anniversary %1$s, check your inventory for a gift"
+
+# The events: section has a sub-section for each configured event.
+# The sub section has the date for the event and the gift.
+# These events apply to all players with the proper permissions
+# and no annoucement will be made.
+
+events:
+  christmas:
+    date: 12-25
+    gift:
+      enabled: True
+      belated: False
+      id: 263:0 # Coal
+      enchantments: [7] # Thorns
+      name: "You've been naughty"
+      message: "Merry Christmas %1$s, check your inventory for a gift"
+
+  new_years:
+    date: 01-01
+    gift:
+      enabled: True
+      belated: False
+      id: 401 # Firework Rocket
+      enchantments: [19] # Knockback
+      name: "Happy New Year!"
+      message: "Happy New Year %1$s, check your inventory for a gift"
+
