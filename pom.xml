@@ -27,6 +27,15 @@
       <type>jar</type>
       <scope>provided</scope>
     </dependency>
+    
+    <dependency>
+      <groupId>com.github.omwah</groupId>
+      <artifactId>OmCommands</artifactId>
+      <version>0.1.0-SNAPSHOT</version>
+      <type>jar</type>
+      <scope>provided</scope>
+    </dependency>
+    
     <!-- Following dependency is provided by CraftBukkit -->
     <dependency>
       <groupId>com.google.guava</groupId>

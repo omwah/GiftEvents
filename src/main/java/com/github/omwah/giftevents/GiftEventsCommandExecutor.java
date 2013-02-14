@@ -1,34 +1,34 @@
 package com.github.omwah.giftevents;
 
+import com.github.omwah.omcommands.NestedCommandExecutor;
+import com.github.omwah.omcommands.PluginCommand;
+import java.util.Map;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
-
-import com.google.common.base.Joiner;
+import org.bukkit.plugin.java.JavaPlugin;
 
 /*
- * This is a sample CommandExectuor
  */
-public class GiftEventsCommandExecutor implements CommandExecutor {
-    private final GiftEvents plugin;
-
-    /*
-     * This command executor needs to know about its plugin from which it came from
+public class GiftEventsCommandExecutor extends NestedCommandExecutor {
+    
+    /**
+     *  Initialize class through super class constructor
+     * @param plugin
+     * @param cmd
      */
-    public GiftEventsCommandExecutor(GiftEvents plugin) {
-        this.plugin = plugin;
+    public GiftEventsCommandExecutor(JavaPlugin plugin, Command cmd) {
+        super(plugin, cmd, "giftevents.admin");
     }
-
+    
     /*
-     * On command set the sample message
+     * Declares commands to be used by the plugin
+     * 
+     * @param plugin
+     * @return
      */
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (sender.hasPermission("sample.message") && args.length > 0) {
-            this.plugin.getConfig().set("sample.message", Joiner.on(' ').join(args));
-            return true;
-        } else {
-            return false;
-        }
+    @Override
+    protected Map<String, PluginCommand> getSubCommands(JavaPlugin plugin) {
+        return null;
     }
+  
 
 }
