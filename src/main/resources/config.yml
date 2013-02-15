@@ -26,7 +26,7 @@ announcement_interval: 30
 
 # Format used for parsing dates present in config file by SimpleDateFormat
 # anything other than month and day in the parsed time will be discarded
-date_format = "MM-dd"
+date_format: "MM-dd"
 
 birthday:
   announcement:

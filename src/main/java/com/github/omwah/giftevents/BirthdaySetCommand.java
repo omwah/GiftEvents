@@ -8,7 +8,7 @@ public class BirthdaySetCommand extends PlayerSpecificCommand {
     private final EventsInfo events_info;
     
     public BirthdaySetCommand(EventsInfo events_info) {
-        super("birthday set");
+        super("set");
 
         this.events_info = events_info;
         

@@ -4,8 +4,8 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.io.File;
-import lib.PatPeter.SQLibrary.SQLite;
 import lib.PatPeter.SQLibrary.DatabaseException;
+import lib.PatPeter.SQLibrary.SQLite;
 import java.sql.ResultSet;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -30,7 +30,8 @@ public class EventsInfo {
         this.date_format = date_format;
 
         try {
-            db_conn = new SQLite(logger, prefix, filename.getAbsolutePath(), filename.getName());
+            db_conn = new SQLite(logger, prefix, filename.getParent(), filename.getName());
+            db_conn.open();
         } catch (DatabaseException e) {
             logger.log(Level.SEVERE, "Could not create EventsInfo database file: " + filename);
             throw e;
@@ -43,12 +44,15 @@ public class EventsInfo {
      * Create database tables if they do not already exist
      */
     private void initializeTables() {
-        if(!db_conn.checkTable("past_events")) {
-            db_conn.createTable("CREATE TABLE past_events (event_name STRING, month INT, day INT, year INT, player STRING, gift_given INT, announcements_left INT);");
+
+        if(!db_conn.isTable("past_events")) {
+            logger.log(Level.INFO, "Creating past_events table");
+            db_conn.createTable("CREATE TABLE east_events (event_name STRING, month INT, day INT, year INT, player STRING, gift_given INT, announcements_left INT);");
         }
 
-        if(!db_conn.checkTable("birthdays")) {
-            db_conn.createTable("CREATE TABLE birthdays (month INT, day INT, player STRING);");
+        if(!db_conn.isTable("birthdays")) {
+            logger.log(Level.INFO, "Creating birthdays table");
+            db_conn.createTable("CREATE TABLE birthdays (player STRING PRIMARY KEY, month INT, day INT);");
         }
     }
 
@@ -65,13 +69,14 @@ public class EventsInfo {
     public Calendar getBirthday(String playerName) {
         Calendar now = new GregorianCalendar();
         try {
-            ResultSet rs = db_conn.query("SELECT month, day FROM birthdays WHERE player = " + playerName.toLowerCase() + ";");
-            if (rs.getRow() > 0) {
+            ResultSet rs = db_conn.query("SELECT month, day FROM birthdays WHERE player = \"" + playerName.toLowerCase() + "\";");
+            if (rs.next()) {
                 return new GregorianCalendar(now.get(Calendar.YEAR), rs.getInt(1), rs.getInt(2));
             }
             rs.close();
         } catch(SQLException e) {
-            logger.log(Level.SEVERE, "Could not retrieve birthday for " + playerName + " due to a SQLException");
+            logger.log(Level.SEVERE, "Could not retrieve birthday for " + playerName + " due to a SQLException:");
+            logger.log(Level.SEVERE, e.toString());
         }
 
         return null;
@@ -100,9 +105,10 @@ public class EventsInfo {
     public boolean setBirthday(Calendar calDate, String playerName) {
         try {
             // Insert new entry
-            db_conn.query("INSERT OR REPLACE INTO birthdays (month, day) VALUES (" + calDate.get(Calendar.MONTH) + ", " + calDate.get(Calendar.DAY_OF_MONTH) + ") WHERE player = " + playerName.toLowerCase() + ";");
+            db_conn.query("INSERT OR REPLACE INTO birthdays VALUES (\"" + playerName.toLowerCase() + "\", " + calDate.get(Calendar.MONTH) + ", " + calDate.get(Calendar.DAY_OF_MONTH) + ");");
         } catch(SQLException e) {
-            logger.log(Level.SEVERE, "Could not set birthday for " + playerName + " due to a SQLException");
+            logger.log(Level.SEVERE, "Could not set birthday for " + playerName + " due to a SQLException:");
+            logger.log(Level.SEVERE, e.toString());
             return false;
         }
 

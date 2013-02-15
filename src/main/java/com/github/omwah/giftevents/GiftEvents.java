@@ -3,6 +3,8 @@ package com.github.omwah.giftevents;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
 import java.io.File;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 /*
  * This is the main class of GiftEvents
@@ -20,6 +22,11 @@ public class GiftEvents extends JavaPlugin {
         
         // Create the PluginListener
         new GiftEventsListener(this);
+
+        // Load event information database for keeping track of 
+        // birthdays and whether gifts have been handed out
+        File db_file = new File(this.getDataFolder(), "events_info");
+        events_info = new EventsInfo(this.getLogger(), this.getName(), db_file, getDateFormat()); 
         
         // Load up the list of commands in the plugin.yml and register each of these
         // This makes is simpler to update the command names that this Plugin responds
@@ -30,10 +37,6 @@ public class GiftEvents extends JavaPlugin {
             curr_cmd.setExecutor(new GiftEventsCommandExecutor(this, curr_cmd));
         }
 
-        // Load event information database for keeping track of 
-        // birthdays and whether gifts have been handed out
-        File db_file = new File(this.getDataFolder(), "events_info.db");
-        events_info = new EventsInfo(this.getLogger(), this.getName(), db_file); 
     }
     
     /*
@@ -45,4 +48,19 @@ public class GiftEvents extends JavaPlugin {
         events_info.close();        
     }
 
+    /*
+     * Returns the EventsInfo databvase  
+     */
+
+    public EventsInfo getEventsInfo() {
+        return events_info;
+    }
+
+    /*
+     * Return the date format specified in the configuration file
+     */
+
+    public DateFormat getDateFormat() {
+        return new SimpleDateFormat(getConfig().getString("date_format", "MM-dd"));
+    }
 }

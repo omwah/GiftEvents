@@ -23,13 +23,13 @@ permissions:
       giftevents.anniversary: true
       giftevents.events: true
       giftevents.admin: true
-  giftevents.birthday
+  giftevents.birthday:
     description: Allow access to birthday commands and functionality
     default: true
-  giftevents.anniversary
+  giftevents.anniversary:
     description: Allow access to anniversary commands and functionality
     default: true
-  giftevents.events
+  giftevents.events:
     description: Allow access to events commands and functionality
     default: true
   giftevents.admin:
