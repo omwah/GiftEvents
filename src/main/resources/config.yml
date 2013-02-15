@@ -22,7 +22,11 @@
 # annoucment_interval minutes previously
 
 # Time in minutes between annoucements should a player log off then back on
-annoucment_interval: 30
+announcement_interval: 30
+
+# Format used for parsing dates present in config file by SimpleDateFormat
+# anything other than month and day in the parsed time will be discarded
+date_format = "MM-dd"
 
 birthday:
   announcement:
@@ -41,7 +45,7 @@ birthday:
 anniversary:
   apnnouncement:
     enabled: True 
-    message: "Today is %1$s's sever join anniversary. Player since %2$tm %2$te,%2$tY"
+    message: "Today is %1$s's first play anniversary. Player since %2$tm %2$te,%2$tY"
     max_num: 5
 
   gift:
@@ -50,7 +54,7 @@ anniversary:
     id: 264 # Diamond
     enchantments: [48] # Power
     name: "Happy Anniversary!"
-    message: "Happy Anniversary %1$s, check your inventory for a gift"
+    message: "Happy First Play Anniversary %1$s, check your inventory for a gift"
 
 # The events: section has a sub-section for each configured event.
 # The sub section has the date for the event and the gift.

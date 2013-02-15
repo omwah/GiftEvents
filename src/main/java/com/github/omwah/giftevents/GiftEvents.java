@@ -2,11 +2,14 @@ package com.github.omwah.giftevents;
 
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
+import java.io.File;
 
 /*
  * This is the main class of GiftEvents
  */
 public class GiftEvents extends JavaPlugin {
+    private EventsInfo events_info;
+
     /*
      * Enable plugin, set up commands and configuration
      */
@@ -26,6 +29,11 @@ public class GiftEvents extends JavaPlugin {
             PluginCommand curr_cmd = this.getCommand(command_name);
             curr_cmd.setExecutor(new GiftEventsCommandExecutor(this, curr_cmd));
         }
+
+        // Load event information database for keeping track of 
+        // birthdays and whether gifts have been handed out
+        File db_file = new File(this.getDataFolder(), "events_info.db");
+        events_info = new EventsInfo(this.getLogger(), this.getName(), db_file); 
     }
     
     /*
@@ -33,7 +41,8 @@ public class GiftEvents extends JavaPlugin {
      */
     @Override
     public void onDisable() {
-        
+        // Close database connection
+        events_info.close();        
     }
 
 }

@@ -17,6 +17,12 @@
       <id>bukkit-repo</id>
       <url>http://repo.bukkit.org/content/groups/public/</url>
     </repository>
+
+    <repository>
+      <id>omwah-repo</id>
+      <url>http://omwah.sdf.org/maven/repo/</url>
+    </repository>
+
   </repositories>
 
   <dependencies>
@@ -35,7 +41,15 @@
       <type>jar</type>
       <scope>provided</scope>
     </dependency>
-    
+
+    <dependency>
+      <groupId>lib.PatPeter</groupId>
+      <artifactId>SQLibrary</artifactId>
+      <version>4.0</version>
+      <type>jar</type>
+      <scope>provided</scope>
+    </dependency>
+     
     <!-- Following dependency is provided by CraftBukkit -->
     <dependency>
       <groupId>com.google.guava</groupId>
