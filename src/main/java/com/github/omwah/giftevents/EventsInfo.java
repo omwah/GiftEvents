@@ -46,7 +46,7 @@ public class EventsInfo {
 
         try {
             if(!db_conn.isTable("past_events")) {
-                db_conn.query("CREATE TABLE east_events (event_name STRING, month INT, day INT, year INT, player STRING, gift_given INT, announcements_left INT);");
+                db_conn.query("CREATE TABLE past_events (event_name STRING, month INT, day INT, year INT, player STRING, gift_given INT, announcements_left INT);");
             }
 
             if(!db_conn.isTable("birthdays")) {

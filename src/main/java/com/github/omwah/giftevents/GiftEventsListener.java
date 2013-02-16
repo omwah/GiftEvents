@@ -1,11 +1,7 @@
 package com.github.omwah.giftevents;
 
-import java.text.MessageFormat;
-
-import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 
 /*
