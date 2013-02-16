@@ -10,7 +10,6 @@ import java.sql.ResultSet;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.text.ParseException;
 
@@ -33,7 +32,7 @@ public class EventsInfo {
             db_conn = new SQLite(logger, prefix, filename.getParent(), filename.getName());
             db_conn.open();
         } catch (DatabaseException e) {
-            logger.log(Level.SEVERE, "Could not create EventsInfo database file: " + filename);
+            logger.log(Level.SEVERE, "Could not create EventsInfo database file: {0}", filename);
             throw e;
         }
 
@@ -75,7 +74,7 @@ public class EventsInfo {
             }
             rs.close();
         } catch(SQLException e) {
-            logger.log(Level.SEVERE, "Could not retrieve birthday for " + playerName + " due to a SQLException:");
+            logger.log(Level.SEVERE, "Could not retrieve birthday for {0} due to a SQLException:", playerName);
             logger.log(Level.SEVERE, e.toString());
         }
 
@@ -91,7 +90,7 @@ public class EventsInfo {
         try {
             date = date_format.parse(dateStr);
         } catch (ParseException e) {
-            logger.log(Level.SEVERE, "Could not set birthday for " + playerName + " due to a ParseException when attempting to convert date string");
+            logger.log(Level.SEVERE, "Could not set birthday for {0} due to a ParseException when attempting to convert date string", playerName);
             return false;
         }
         Calendar calendar = Calendar.getInstance();
@@ -107,7 +106,7 @@ public class EventsInfo {
             // Insert new entry
             db_conn.query("INSERT OR REPLACE INTO birthdays VALUES (\"" + playerName.toLowerCase() + "\", " + calDate.get(Calendar.MONTH) + ", " + calDate.get(Calendar.DAY_OF_MONTH) + ");");
         } catch(SQLException e) {
-            logger.log(Level.SEVERE, "Could not set birthday for " + playerName + " due to a SQLException:");
+            logger.log(Level.SEVERE, "Could not set birthday for {0} due to a SQLException:", playerName);
             logger.log(Level.SEVERE, e.toString());
             return false;
         }
