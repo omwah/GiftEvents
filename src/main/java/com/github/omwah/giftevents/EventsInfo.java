@@ -1,17 +1,17 @@
 package com.github.omwah.giftevents;
 
+import java.io.File;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.io.File;
 import lib.PatPeter.SQLibrary.DatabaseException;
 import lib.PatPeter.SQLibrary.SQLite;
-import java.sql.ResultSet;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.text.DateFormat;
-import java.util.Date;
-import java.text.ParseException;
 
 /*
  * Keeps track of past events using a SQLite database:w
