@@ -2,10 +2,10 @@ package com.github.omwah.giftevents;
 
 import com.github.omwah.omcommands.NestedCommandExecutor;
 import com.github.omwah.omcommands.PluginCommand;
-import java.util.Map;
-import org.bukkit.command.Command;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.Map;
+import org.bukkit.command.Command;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /*

@@ -2,9 +2,9 @@ package com.github.omwah.giftevents;
 
 import com.github.omwah.omcommands.CommandHandler;
 import com.github.omwah.omcommands.PlayerSpecificCommand;
-import org.bukkit.command.CommandSender;
-import java.util.Calendar;
 import java.text.DateFormat;
+import java.util.Calendar;
+import org.bukkit.command.CommandSender;
 
 public class BirthdayGetCommand extends PlayerSpecificCommand {
     private final EventsInfo events_info;
