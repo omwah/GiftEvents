@@ -31,9 +31,9 @@ public class EventsInfo {
         try {
             db_conn = new SQLite(logger, prefix, filename.getParent(), filename.getName());
             db_conn.open();
-        } catch (DatabaseException e) {
+        } catch (DatabaseException ex) {
             logger.log(Level.SEVERE, "Could not create EventsInfo database file: {0}", filename);
-            throw e;
+            throw ex;
         }
 
         initializeTables();
@@ -44,14 +44,17 @@ public class EventsInfo {
      */
     private void initializeTables() {
 
-        if(!db_conn.isTable("past_events")) {
-            logger.log(Level.INFO, "Creating past_events table");
-            db_conn.createTable("CREATE TABLE east_events (event_name STRING, month INT, day INT, year INT, player STRING, gift_given INT, announcements_left INT);");
-        }
+        try {
+            if(!db_conn.isTable("past_events")) {
+                db_conn.query("CREATE TABLE east_events (event_name STRING, month INT, day INT, year INT, player STRING, gift_given INT, announcements_left INT);");
+            }
 
-        if(!db_conn.isTable("birthdays")) {
-            logger.log(Level.INFO, "Creating birthdays table");
-            db_conn.createTable("CREATE TABLE birthdays (player STRING PRIMARY KEY, month INT, day INT);");
+            if(!db_conn.isTable("birthdays")) {
+                db_conn.query("CREATE TABLE birthdays (player STRING PRIMARY KEY, month INT, day INT);");
+            }
+        } catch (SQLException ex) {
+            logger.log(Level.SEVERE, "Failed to create all necessary tables.");
+            logger.log(Level.SEVERE, ex.toString());
         }
     }
 
@@ -73,9 +76,9 @@ public class EventsInfo {
                 return new GregorianCalendar(now.get(Calendar.YEAR), rs.getInt(1), rs.getInt(2));
             }
             rs.close();
-        } catch(SQLException e) {
+        } catch(SQLException ex) {
             logger.log(Level.SEVERE, "Could not retrieve birthday for {0} due to a SQLException:", playerName);
-            logger.log(Level.SEVERE, e.toString());
+            logger.log(Level.SEVERE, ex.toString());
         }
 
         return null;
@@ -89,7 +92,7 @@ public class EventsInfo {
         Date date;
         try {
             date = date_format.parse(dateStr);
-        } catch (ParseException e) {
+        } catch (ParseException ex) {
             logger.log(Level.SEVERE, "Could not set birthday for {0} due to a ParseException when attempting to convert date string", playerName);
             return false;
         }
@@ -105,9 +108,9 @@ public class EventsInfo {
         try {
             // Insert new entry
             db_conn.query("INSERT OR REPLACE INTO birthdays VALUES (\"" + playerName.toLowerCase() + "\", " + calDate.get(Calendar.MONTH) + ", " + calDate.get(Calendar.DAY_OF_MONTH) + ");");
-        } catch(SQLException e) {
+        } catch(SQLException ex) {
             logger.log(Level.SEVERE, "Could not set birthday for {0} due to a SQLException:", playerName);
-            logger.log(Level.SEVERE, e.toString());
+            logger.log(Level.SEVERE, ex.toString());
             return false;
         }
 
