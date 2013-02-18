@@ -8,10 +8,12 @@ import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import lib.PatPeter.SQLibrary.DatabaseException;
 import lib.PatPeter.SQLibrary.SQLite;
+import org.bukkit.entity.Player;
 
 /*
  * Keeps track of past events using a SQLite database:w
@@ -68,6 +70,13 @@ public class EventsInfo {
     /*
      * Gets the birthday for a player, for the current year
      */
+    public Calendar getBirthday(Player playerObj) {
+        return getBirthday(playerObj.getName());
+    }
+    
+    /*
+     * Gets the birthday for a player, for the current year
+     */
     public Calendar getBirthday(String playerName) {
         Calendar now = new GregorianCalendar();
         try {
@@ -116,6 +125,15 @@ public class EventsInfo {
 
         // Success
         return true;
+    }
+    
+    /*
+     * Gets the player first played date
+     */
+    public Calendar getFirstPlayedDate(Player playerObj) {
+        Calendar fp_cal = Calendar.getInstance();
+        fp_cal.setTime(new Date(playerObj.getFirstPlayed()));
+        return fp_cal;
     }
 
 }

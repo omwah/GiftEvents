@@ -1,80 +1,73 @@
-# Announcement and gift messages are formatted with the Java String Formatter
-# And passed player_name, Calendar date
+# Time in minutes between annoucements should a player log off then back on
+announcement_interval: 30
 
-# For each type of event a gift can be configured through the gift: section
-# with the following properties:
-# enabled - Is the gift given 
-# belated - Is the gift given after the event has passed
-# items - Items to be put in player's inventory
-# name - Name to give to gift, as if applied by an anvil
-
-# Explanation of items:
-# items: is a list of associative arrays with each associative array having:
-# id - Item id
-# enchantments - Associative array with id as the key and level as the value
-# amount - Optional number of the item to give
-
-# The birthday: and anniversary: are special in that they are based on
-# dates stored in server data and make server wide announcements.
-
-# The accountment section for birthday and anniversary: have these options:
-# enabled - Whether or not to make an annoucement whenever the player joins
-# on the day in question.
-# message - The message that will be broadcast
-# max_num - How many times in one day the message will be broadcast before
+# How many times in one day the message will be broadcast before
 # stopping. So if a player logs on and off several times, the annoucement
 # only happens this number of times. And only if the last message was made
 # annoucment_interval minutes previously
-
-# Time in minutes between annoucements should a player log off then back on
-announcement_interval: 30
+maximum_annoucments: 5
 
 # Format used for parsing dates present in config file by SimpleDateFormat
 # anything other than month and day in the parsed time will be discarded
 date_format: "MM-dd"
 
-birthday:
-  belated: True
-
-  announcement:
-    enabled: True 
-    message: "Today is %1$s's birthday!"
-    max_num: 5
-
-  gift:
-    enabled: True
-    items:
-      - { id: 354, enchantments: {35: 1} } # Cake w/ Fortune I
-    name: "Happy Birthday!"
-    message: "Happy Birthday %1$s, check your inventory for a gift"
-
-anniversary:
-  belated: True
-
-  apnnouncement:
-    enabled: True 
-    message: "Today is %1$s's first play anniversary. Player since %2$tm %2$te,%2$tY"
-    max_num: 5
-
-  gift:
-    enabled: True
-    items:
-      - { id: 264, enchantments: {48: 1}, amount: 5 } #  Diamond w/ Power I
-    name: "Happy Anniversary!"
-    message: "Happy First Play Anniversary %1$s, check your inventory for a gift"
-
 # The events: section has a sub-section for each configured event.
-# The sub section has the date for the event and the gift.
-# These events apply to all players with the proper permissions
-# and no annoucement will be made.
+#
+# The birthday: and anniversary: events are special in that they are based on
+# dates stored in server. They can disabled by removing or commenting them
+# out in the configuration.
+#
+# Events with dates apply to all players with the proper permissions.
+#
+# Each event has these options:
+# date: Date of the event, ignored for birthday: and anniversary: events
+# belated - Is the gift given after the event has passed, default is false
+# annoucement - An optional message will be made server wide whenever a player 
+# joins matching the event date and if they have not already exhausted their 
+# allotment of messages.
+
+# For each type of event gits can be configured through the gift: section
+# with the following properties:
+# items - Items to be put in player's inventory
+# name - Name to give to items if not specified for item seperately
+# message - Message to give to player when the recieve the gift
+
+# Explanation of items:
+# items: is a list of associative arrays with each associative array having:
+# id - Item id
+# enchantments - Optional associative array with id as the key and level as the value
+# amount - Optional number of the item to give
+# name - Optional name to give to item instead of one specified in gift section
+
+# Announcement and gift messages are formatted with the Java String Formatter
+# and passed player_name, and a Calendar date
 
 events:
-  christmas:
-    date: 12-25
+  birthday:
     belated: True
+    announcement: "Today is %1$s's birthday!"
 
     gift:
-      enabled: True
+      items:
+        - { id: 354, enchantments: {35: 1} } # Cake w/ Fortune I
+      name: "Happy Birthday!"
+      message: "Happy Birthday %1$s, check your inventory for a gift"
+
+  anniversary:
+    belated: True
+    announcement: "Today is %1$s's first play anniversary. Player since %2$tm %2$te,%2$tY"
+
+    gift:
+      items:
+        - { id: 264, enchantments: {48: 1}, amount: 5 } #  Diamond w/ Power I
+      name: "Happy Anniversary!"
+      message: "Happy First Play Anniversary %1$s, check your inventory for a gift"
+    
+  christmas:
+    date: 12-25
+    belated: False
+
+    gift:
       items:
         - { id: 263, enchantments: {7: 1} } # Coal w/ Thorns I
       name: "You've been naughty"
@@ -82,12 +75,11 @@ events:
 
   new_years:
     date: 01-01
-    belated: True
+    belated: False
 
     gift:
-      enabled: True
       items:
-        - { id: 401, enchantments: {19: 1} } # Firework Rocket w/ Knockback I
+        - { id: 401, name: "Blast off!" } # Firework Rocket
       name: "Happy New Year!"
       message: "Happy New Year %1$s, check your inventory for a gift"
 
