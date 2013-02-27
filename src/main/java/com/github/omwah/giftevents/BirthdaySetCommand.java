@@ -13,7 +13,7 @@ public class BirthdaySetCommand extends PlayerSpecificCommand {
         this.events_info = events_info;
         
         setDescription("Set a player's birthday");
-        setUsage(this.getName() + " §8<date_string> [player_name]");
+        setUsage("/%s §8<date_string> [player_name]");
         setArgumentRange(1, 2);
         setIdentifiers(this.getName());
         setPermission("giftevents.birthday");

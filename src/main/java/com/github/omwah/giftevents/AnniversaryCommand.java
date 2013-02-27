@@ -17,9 +17,9 @@ public class AnniversaryCommand extends PlayerSpecificCommand {
         this.display_format = display_format;
 
         setDescription("Get a player's first play date");
-        setUsage(this.getName() + " §8[player_name]");
+        setUsage("/%s §8[player_name]");
         setArgumentRange(0, 1);
-        setIdentifiers(this.getName());
+        setIdentifiers(this.getName(), "anniv", "first_play");
         setPermission("giftevents.anniversary");
     }
 
