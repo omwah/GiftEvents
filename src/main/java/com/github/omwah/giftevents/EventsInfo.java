@@ -13,7 +13,6 @@ import java.util.logging.Logger;
 import lib.PatPeter.SQLibrary.DatabaseException;
 import lib.PatPeter.SQLibrary.SQLite;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /*
@@ -73,7 +72,7 @@ public class EventsInfo {
     /*
      * Gets the birthday for a player, for the current year
      */
-    public Calendar getBirthday(Player playerObj) {
+    public Calendar getBirthday(OfflinePlayer playerObj) {
         return getBirthday(playerObj.getName());
     }
     
@@ -133,7 +132,7 @@ public class EventsInfo {
     /*
      * Gets the player first played date
      */
-    public Calendar getFirstPlayedDate(Player playerObj) {
+    public Calendar getFirstPlayedDate(OfflinePlayer playerObj) {
         Calendar fp_cal = Calendar.getInstance();
         fp_cal.setTime(new Date(playerObj.getFirstPlayed()));
         return fp_cal;
@@ -143,7 +142,7 @@ public class EventsInfo {
      * Get the first played date for a player based on their player name
      */
     public Calendar getFirstPlayedDate(String playerName) {
-        Player player_obj = plugin.getServer().getOfflinePlayer(playerName).getPlayer();
+        OfflinePlayer player_obj = plugin.getServer().getOfflinePlayer(playerName.toLowerCase());
         if (player_obj != null) {
             return getFirstPlayedDate(player_obj);
         } else {
