@@ -10,7 +10,7 @@ commands:
     usage: /birthday ? - For more information
   anniversary:
     description: See player's first join anniversary date
-    aliases: [anniv]
+    aliases: [anniv, first_play]
     usage: /anniversary ? - For more information
   events:
     description: See a list of global gift dates

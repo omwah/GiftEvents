@@ -8,17 +8,19 @@ import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import lib.PatPeter.SQLibrary.DatabaseException;
 import lib.PatPeter.SQLibrary.SQLite;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
 
 /*
  * Keeps track of past events using a SQLite database:w
  */
 public class EventsInfo {
+    private final JavaPlugin plugin;
     private final SQLite db_conn;
     private final Logger logger;
     private final DateFormat date_format;
@@ -26,8 +28,9 @@ public class EventsInfo {
     /*
      * Creates a new instance at the given filename, prefix should be the Plugin's name  
      */
-    public EventsInfo(Logger logger, String prefix, File filename, DateFormat date_format) {
-        this.logger = logger;
+    public EventsInfo(JavaPlugin plugin, String prefix, File filename, DateFormat date_format) {
+        this.plugin = plugin;
+        this.logger = plugin.getLogger();
         this.date_format = date_format;
 
         try {
@@ -134,6 +137,18 @@ public class EventsInfo {
         Calendar fp_cal = Calendar.getInstance();
         fp_cal.setTime(new Date(playerObj.getFirstPlayed()));
         return fp_cal;
+    }
+
+    /*
+     * Get the first played date for a player based on their player name
+     */
+    public Calendar getFirstPlayedDate(String playerName) {
+        Player player_obj = plugin.getServer().getOfflinePlayer(playerName).getPlayer();
+        if (player_obj != null) {
+            return getFirstPlayedDate(player_obj);
+        } else {
+            return null;
+        }
     }
 
 }

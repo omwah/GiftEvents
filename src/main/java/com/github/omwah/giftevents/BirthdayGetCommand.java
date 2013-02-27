@@ -19,7 +19,7 @@ public class BirthdayGetCommand extends PlayerSpecificCommand {
         setDescription("Get a player's birthday");
         setUsage(this.getName() + " §8[player_name]");
         setArgumentRange(0, 1);
-        setIdentifiers(this.getName(), "birthday");
+        setIdentifiers(this.getName());
         setPermission("giftevents.birthday");
     }
 
