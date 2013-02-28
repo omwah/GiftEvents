@@ -1,27 +1,20 @@
 package com.github.omwah.giftevents;
 
 import java.util.Calendar;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
-/*
+/**
  */
-public class Event {
-    private String name;
-    private Calendar date;
-    private boolean belated;
-    private String annoucement;
-    private GiftSet gifts;
+public interface Event {
+ 
+    public String getName();
     
-    public Event(EventsInfo eventsInfo, ConfigurationSection eventSection) {
-        
-    }
+    public Calendar getDate();
     
-    public String getName() {
-        return this.name;
-    }
+    public boolean canGiftBelated();
     
-    public Calendar getDate(Player playerObj) {
-        return null;   
-    }
+    public String announcement();
+    
+    public GiftSet getGifts();
+    
 }
