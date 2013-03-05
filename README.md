@@ -2,11 +2,13 @@ GiftEvents
 ==========
 
 This plugin handles giving out Gifts to players when they join on certain types of days:
+
 * Their birthday if registered
 * Their first played anniversary
 * Arbitrary defined dates
 
-For birthdays and anniversarys an annoucement can optionally be made to all other players. Gifts can optionally be recieved after an event should the player miss logging on. Safeguards are in place to keep a player from changing their birthday to get additional gifts and to keep annoucements from occuring too frequently.
+For birthdays and anniversarys an announcement can optionally be made to all other players. Gifts can optionally be received after an event should the player miss logging on. Safeguards are in place to keep a player from changing their birthday to get additional gifts and to keep announcements from occurring too frequently.
+
 
 Compilation
 -----------
