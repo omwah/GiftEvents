@@ -1,4 +1,4 @@
-main: com.github.omwah.giftevents.GiftEvents
+main: com.github.omwah.giftevents.GiftEventsPlugin
 name: ${project.name}
 version: ${project.version}
 author: Omwah

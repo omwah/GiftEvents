@@ -3,8 +3,6 @@ package com.github.omwah.giftevents;
 import java.io.File;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.DateFormat;
-import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -16,21 +14,19 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /*
- * Keeps track of past events using a SQLite database:w
+ * Keeps track of past events using a SQLite database
  */
 public class EventsInfo {
     private final JavaPlugin plugin;
     private final SQLite db_conn;
     private final Logger logger;
-    private final DateFormat date_format;
 
     /*
      * Creates a new instance at the given filename, prefix should be the Plugin's name  
      */
-    public EventsInfo(JavaPlugin plugin, String prefix, File filename, DateFormat date_format) {
+    public EventsInfo(JavaPlugin plugin, String prefix, File filename) {
         this.plugin = plugin;
         this.logger = plugin.getLogger();
-        this.date_format = date_format;
 
         try {
             db_conn = new SQLite(logger, prefix, filename.getParent(), filename.getName());
@@ -50,7 +46,7 @@ public class EventsInfo {
 
         try {
             if(!db_conn.isTable("past_events")) {
-                db_conn.query("CREATE TABLE past_events (event_name STRING, month INT, day INT, year INT, player STRING, gift_given INT, announcements_left INT);");
+                db_conn.query("CREATE TABLE past_events (event_name STRING, month INT, day INT, year INT, player STRING, gift_given INT, announcements_made INT);");
             }
 
             if(!db_conn.isTable("birthdays")) {
@@ -80,7 +76,7 @@ public class EventsInfo {
      * Gets the birthday for a player, for the current year
      */
     public Calendar getBirthday(String playerName) {
-        Calendar now = new GregorianCalendar();
+        Calendar now = Calendar.getInstance();
         try {
             ResultSet rs = db_conn.query("SELECT month, day FROM birthdays WHERE player = \"" + playerName.toLowerCase() + "\";");
             if (rs.next()) {
@@ -93,23 +89,6 @@ public class EventsInfo {
         }
 
         return null;
-    }
-
-    /*
-     * Set the birthday for a user using a string formatted according to 
-     * the format code in the config file
-     */
-    public boolean setBirthday(String dateStr, String playerName) {
-        Date date;
-        try {
-            date = date_format.parse(dateStr);
-        } catch (ParseException ex) {
-            logger.log(Level.SEVERE, "Could not set birthday for {0} due to a ParseException when attempting to convert date string", playerName);
-            return false;
-        }
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-        return setBirthday(calendar, playerName);
     }
 
     /*
@@ -149,5 +128,110 @@ public class EventsInfo {
             return null;
         }
     }
+    
+    /*
+     * Helper to retrieve the proper past events row
+     */
+    private ResultSet getPastEvent(GiftEvent event, OfflinePlayer player) throws SQLException {
+        Calendar now = Calendar.getInstance();
+        Calendar cal = event.getDate(player.getPlayer());
+        
+        ResultSet rs = db_conn.query("SELECT * FROM past_events WHERE " +
+                    "event_name = \"" + event.getName() + "\" AND " +
+                    "player = \"" + player.getName().toLowerCase() + "\" AND " +
+                    "year = " + now.get(Calendar.YEAR) + " AND " +
+                    "month = " + cal.get(Calendar.MONTH) + " AND " +
+                    "day = " + cal.get(Calendar.DAY_OF_MONTH) + ";");
+        
+        if (!rs.next()) {
+            rs = db_conn.query("INSERT INTO past_events " +
+                    "(event_name, month, day, year, player, gift_given, announcements_made) " +
+                    "VALUES (" +
+                    "\"" + event.getName() + "\", " +
+                    "\"" + player.getName().toLowerCase() + "\", " +
+                    now.get(Calendar.YEAR) + ", " +
+                    cal.get(Calendar.MONTH) + ", " +
+                    cal.get(Calendar.DAY_OF_MONTH) + ", " + 
+                    "0, 0);");
+        }
+        return rs;
+    }
+    
+    /*
+     * Queries database to see if a specific gift has been given to a player
+     */
+    public boolean hasGiftBeenGiven(GiftEvent event, OfflinePlayer player) {       
+        try {
+            ResultSet rs = getPastEvent(event, player);
 
+            if(rs != null && rs.next() && rs.getBoolean("gift_given")) {
+                rs.close();
+                return true;
+            }
+        } catch(SQLException ex) {
+            logger.log(Level.SEVERE, "Could not query if gift given for {0} due to a SQLException:", player.getName());
+            logger.log(Level.SEVERE, ex.toString());
+        }
+        
+        return false;       
+    }
+
+    /*
+     * Sets in the database that a gift has been given to a player
+     * 
+     * Returns true of the query was succesful
+     */
+    public boolean setGiftGiven(GiftEvent event, OfflinePlayer player, boolean given) {
+        try {
+            ResultSet rs = getPastEvent(event, player);
+            rs.updateBoolean("gift_given", given);
+            rs.close();
+            return true;
+        } catch(SQLException ex) {
+            logger.log(Level.SEVERE, "Could not update gift given for {0} due to a SQLException:", player.getName());
+            logger.log(Level.SEVERE, ex.toString());
+        }        
+
+        return false;        
+    }
+    
+    /*
+     * Gets how many annoucements have been made about this player for this event
+     */
+    public int getNumAnnoucementsMade(GiftEvent event, OfflinePlayer player) {       
+        try {
+            ResultSet rs = getPastEvent(event, player);
+
+            if(rs != null && rs.next()) {
+                int num_announcements = rs.getInt("annoucements_made");
+                rs.close();
+                return num_announcements;
+            }
+        } catch(SQLException ex) {
+            logger.log(Level.SEVERE, "Could not query number of announcements made for {0} due to a SQLException:", player.getName());
+            logger.log(Level.SEVERE, ex.toString());
+        }
+        
+        return 0;       
+    }
+    
+    /*
+     * Sets how many annoucements have been made about this player for this event
+     */
+    public boolean setNumAnnoucementsMade(GiftEvent event, OfflinePlayer player, int numMade) {
+        try {
+            ResultSet rs = getPastEvent(event, player);
+
+            if(rs != null && rs.next()) {
+                rs.updateInt("annoucements_made", numMade);
+                rs.close();
+                return true;
+            }
+        } catch(SQLException ex) {
+            logger.log(Level.SEVERE, "Could not set number of announcements made for {0} due to a SQLException:", player.getName());
+            logger.log(Level.SEVERE, ex.toString());
+        }
+        
+        return false;       
+    }
 }

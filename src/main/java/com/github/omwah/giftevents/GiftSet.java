@@ -79,11 +79,18 @@ public class GiftSet {
     }
     
     /*
+     * Returns the message template to be sent to the player when they recieve 
+     * their gifts
+     */
+    public String getMessageTemplate() {
+        return message;
+    }
+    
+    /*
      * Place the items represented by this instance into the player's inventory
      * Send them a message about their gift if it is enabled
      */
-    
-    public void giveToPlayer(Player player, Calendar event_date) {
+    public void giveToPlayer(Player player) {
         // Try and place items in player's inventory and drop them next to 
         // them if they can't fit
         for(ItemStack item : items) {
@@ -99,11 +106,6 @@ public class GiftSet {
                 }
             }
         }
-        
-        // Only send a message to the player if they are online and we actually
-        // have a message
-        if(player.isOnline() && message != null) {
-            player.sendMessage(String.format(message, player.getName(), event_date));
-        }
+
     }
 }

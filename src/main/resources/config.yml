@@ -7,9 +7,12 @@ announcement_interval: 30
 # annoucment_interval minutes previously
 maximum_annoucments: 5
 
-# Format used for parsing dates present in config file by SimpleDateFormat
-# anything other than month and day in the parsed time will be discarded
-date_format: "MM-dd"
+date_format:
+  # Format used for parsing dates present in config file or from user input
+  input: "MM-dd"
+  
+  # Format of dates when displaying them to the user
+  output: "MM-dd"
 
 # The events: section has a sub-section for each configured event.
 #

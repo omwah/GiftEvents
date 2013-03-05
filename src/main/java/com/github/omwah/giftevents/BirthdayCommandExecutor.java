@@ -15,7 +15,7 @@ public class BirthdayCommandExecutor extends NestedCommandExecutor {
     /**
      *  Initialize class through super class constructor
      */
-    public BirthdayCommandExecutor(GiftEvents plugin, Command cmd) {
+    public BirthdayCommandExecutor(GiftEventsPlugin plugin, Command cmd) {
         super(plugin, cmd, "giftevents.admin");
     }
     
@@ -24,13 +24,13 @@ public class BirthdayCommandExecutor extends NestedCommandExecutor {
      */
     @Override
     protected List<PluginCommand> getSubCommands(JavaPlugin plugin) {
-        GiftEvents gift_events = (GiftEvents) plugin;
+        GiftEventsPlugin gift_events = (GiftEventsPlugin) plugin;
 
         // Set up which subcommands of the main command are available
         ArrayList<PluginCommand> sub_cmd_list = new ArrayList<PluginCommand>();
         
-        sub_cmd_list.add(new BirthdayGetCommand(gift_events.getEventsInfo(), gift_events.getDateFormat()));
-        sub_cmd_list.add(new BirthdaySetCommand(gift_events.getEventsInfo()));
+        sub_cmd_list.add(new BirthdayGetCommand(gift_events.getEventsInfo(), gift_events.getOutputDateFormat()));
+        sub_cmd_list.add(new BirthdaySetCommand(gift_events.getEventsInfo(), gift_events.getInputDateFormat()));
 
         return sub_cmd_list;
     }
