@@ -5,7 +5,7 @@ announcement_interval: 30
 # stopping. So if a player logs on and off several times, the annoucement
 # only happens this number of times. And only if the last message was made
 # annoucment_interval minutes previously
-maximum_annoucments: 5
+maximum_announcements: 5
 
 date_format:
   # Format used for parsing dates present in config file or from user input
