@@ -4,7 +4,7 @@ import java.util.Calendar;
 import org.bukkit.entity.Player;
 
 /**
- * An GiftEvent represents an event that might result in an announcement made
+ * An GiftEvent represents an event that might result in an getAnnouncement made
  * on behalf of a player. Additionally players can receive gifts for an event.
  */
 public interface GiftEvent {
@@ -17,7 +17,7 @@ public interface GiftEvent {
     /*
      * The date of the event
      */
-    public Calendar getDate(Player player);
+    public Calendar getDate(String playerName);
 
     /*
      * Whether or not the gift can be given after the actual date has passed
@@ -27,7 +27,7 @@ public interface GiftEvent {
     /*
      * Returns an annoucement to be made about the event
      */
-    public String announcement(Player player);
+    public String getAnnouncement(String playerName);
     
     /*
      * Sends gifts to the player and returns a message for the player

@@ -16,7 +16,7 @@ public class AnniversaryEvent extends ConfiguredEvent {
     }
     
     @Override
-    public Calendar getDate(Player player) {
-        return this.events_info.getFirstPlayedDate(player);
+    public Calendar getDate(String playerName) {
+        return this.events_info.getFirstPlayedDate(playerName);
     }
 }

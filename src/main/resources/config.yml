@@ -12,7 +12,7 @@ date_format:
   input: "MM-dd"
   
   # Format of dates when displaying them to the user
-  output: "MM-dd"
+  output: "MMM dd"
 
 # The events: section has a sub-section for each configured event.
 #
@@ -49,7 +49,6 @@ events:
   birthday:
     belated: True
     announcement: "Today is %1$s's birthday!"
-
     gift:
       items:
         - { id: 354, enchantments: {35: 1} } # Cake w/ Fortune I
@@ -59,17 +58,15 @@ events:
   anniversary:
     belated: True
     announcement: "Today is %1$s's first play anniversary. Player since %2$tm %2$te,%2$tY"
-
     gift:
       items:
         - { id: 264, enchantments: {48: 1}, amount: 5 } #  Diamond w/ Power I
       name: "Happy Anniversary!"
       message: "Happy First Play Anniversary %1$s, check your inventory for a gift"
-    
+
   christmas:
     date: 12-25
     belated: False
-
     gift:
       items:
         - { id: 263, enchantments: {7: 1} } # Coal w/ Thorns I
@@ -79,7 +76,6 @@ events:
   new_years:
     date: 01-01
     belated: False
-
     gift:
       items:
         - { id: 401, name: "Blast off!" } # Firework Rocket

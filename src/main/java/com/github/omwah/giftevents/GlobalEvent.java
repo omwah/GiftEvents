@@ -40,7 +40,7 @@ public class GlobalEvent extends ConfiguredEvent {
     }
 
     @Override
-    public Calendar getDate(Player player) {
+    public Calendar getDate(String playerName) {
         return this.event_calendar;
     }
     

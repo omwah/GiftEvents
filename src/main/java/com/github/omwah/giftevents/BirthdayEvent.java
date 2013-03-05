@@ -17,8 +17,8 @@ public class BirthdayEvent extends ConfiguredEvent {
     }
      
     @Override
-    public Calendar getDate(Player player) {
-        return this.events_info.getBirthday(player);
+    public Calendar getDate(String playerName) {
+        return this.events_info.getBirthday(playerName);
     }
     
 }

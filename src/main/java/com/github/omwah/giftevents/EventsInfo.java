@@ -46,7 +46,7 @@ public class EventsInfo {
 
         try {
             if(!db_conn.isTable("past_events")) {
-                db_conn.query("CREATE TABLE past_events (event_name STRING, month INT, day INT, year INT, player STRING, gift_given INT, announcements_made INT);");
+                db_conn.query("CREATE TABLE past_events (event_name STRING, month INT, day INT, year INT, player STRING, gift_given INT, announcements_made INT, PRIMARY KEY(event_name, month, day, year, player));");
             }
 
             if(!db_conn.isTable("birthdays")) {
@@ -132,44 +132,60 @@ public class EventsInfo {
     /*
      * Helper to retrieve the proper past events row
      */
-    private ResultSet getPastEvent(GiftEvent event, OfflinePlayer player) throws SQLException {
+    private ResultSet getPastEvent(GiftEvent event, String playerName) throws SQLException {
         Calendar now = Calendar.getInstance();
-        Calendar cal = event.getDate(player.getPlayer());
+        Calendar cal = event.getDate(playerName);
         
-        ResultSet rs = db_conn.query("SELECT * FROM past_events WHERE " +
-                    "event_name = \"" + event.getName() + "\" AND " +
-                    "player = \"" + player.getName().toLowerCase() + "\" AND " +
+        String count_query = 
+                "SELECT COUNT(*) FROM past_events WHERE " +
+                    "event_name = \"" + event.getName().toLowerCase() + "\" AND " +
+                    "player = \"" + playerName.toLowerCase() + "\" AND " +
                     "year = " + now.get(Calendar.YEAR) + " AND " +
                     "month = " + cal.get(Calendar.MONTH) + " AND " +
-                    "day = " + cal.get(Calendar.DAY_OF_MONTH) + ";");
+                    "day = " + cal.get(Calendar.DAY_OF_MONTH) + ";";
+        ResultSet count_res = db_conn.query(count_query);
         
-        if (!rs.next()) {
-            rs = db_conn.query("INSERT INTO past_events " +
+        count_res.next();
+        if (count_res.getInt(1) == 0) {
+            System.out.println("No data");
+            String insert_query = 
+                "INSERT INTO past_events " +
                     "(event_name, month, day, year, player, gift_given, announcements_made) " +
                     "VALUES (" +
-                    "\"" + event.getName() + "\", " +
-                    "\"" + player.getName().toLowerCase() + "\", " +
-                    now.get(Calendar.YEAR) + ", " +
+                    "\"" + event.getName().toLowerCase() + "\", " +
                     cal.get(Calendar.MONTH) + ", " +
                     cal.get(Calendar.DAY_OF_MONTH) + ", " + 
-                    "0, 0);");
+                    now.get(Calendar.YEAR) + ", " +
+                    "\"" + playerName.toLowerCase() + "\", " +
+                    "0, 0);";
+            ResultSet insert_res = db_conn.query(insert_query);
         }
-        return rs;
+
+        String select_query = 
+                "SELECT * FROM past_events WHERE " +
+                    "event_name = \"" + event.getName() + "\" AND " +
+                    "player = \"" + playerName.toLowerCase() + "\" AND " +
+                    "year = " + now.get(Calendar.YEAR) + " AND " +
+                    "month = " + cal.get(Calendar.MONTH) + " AND " +
+                    "day = " + cal.get(Calendar.DAY_OF_MONTH) + ";";
+        ResultSet select_res = db_conn.query(select_query);      
+        
+        return select_res;
     }
     
     /*
      * Queries database to see if a specific gift has been given to a player
      */
-    public boolean hasGiftBeenGiven(GiftEvent event, OfflinePlayer player) {       
+    public boolean hasGiftBeenGiven(GiftEvent event, String playerName) {       
         try {
-            ResultSet rs = getPastEvent(event, player);
+            ResultSet rs = getPastEvent(event, playerName);
 
             if(rs != null && rs.next() && rs.getBoolean("gift_given")) {
                 rs.close();
                 return true;
             }
         } catch(SQLException ex) {
-            logger.log(Level.SEVERE, "Could not query if gift given for {0} due to a SQLException:", player.getName());
+            logger.log(Level.SEVERE, "Could not query if gift given for {0} due to a SQLException:", playerName);
             logger.log(Level.SEVERE, ex.toString());
         }
         
@@ -181,14 +197,14 @@ public class EventsInfo {
      * 
      * Returns true of the query was succesful
      */
-    public boolean setGiftGiven(GiftEvent event, OfflinePlayer player, boolean given) {
+    public boolean setGiftGiven(GiftEvent event, String playerName, boolean given) {
         try {
-            ResultSet rs = getPastEvent(event, player);
+            ResultSet rs = getPastEvent(event, playerName);
             rs.updateBoolean("gift_given", given);
             rs.close();
             return true;
         } catch(SQLException ex) {
-            logger.log(Level.SEVERE, "Could not update gift given for {0} due to a SQLException:", player.getName());
+            logger.log(Level.SEVERE, "Could not update gift given for {0} due to a SQLException:", playerName);
             logger.log(Level.SEVERE, ex.toString());
         }        
 
@@ -198,17 +214,17 @@ public class EventsInfo {
     /*
      * Gets how many annoucements have been made about this player for this event
      */
-    public int getNumAnnoucementsMade(GiftEvent event, OfflinePlayer player) {       
+    public int getNumAnnoucementsMade(GiftEvent event, String playerName) {       
         try {
-            ResultSet rs = getPastEvent(event, player);
-
+            ResultSet rs = getPastEvent(event, playerName);
+            
             if(rs != null && rs.next()) {
-                int num_announcements = rs.getInt("annoucements_made");
+                int num_announcements = rs.getInt("announcements_made");
                 rs.close();
                 return num_announcements;
             }
         } catch(SQLException ex) {
-            logger.log(Level.SEVERE, "Could not query number of announcements made for {0} due to a SQLException:", player.getName());
+            logger.log(Level.SEVERE, "Could not query number of announcements made for {0} due to a SQLException:", playerName);
             logger.log(Level.SEVERE, ex.toString());
         }
         
@@ -218,17 +234,17 @@ public class EventsInfo {
     /*
      * Sets how many annoucements have been made about this player for this event
      */
-    public boolean setNumAnnoucementsMade(GiftEvent event, OfflinePlayer player, int numMade) {
+    public boolean setNumAnnoucementsMade(GiftEvent event, String playerName, int numMade) {
         try {
-            ResultSet rs = getPastEvent(event, player);
+            ResultSet rs = getPastEvent(event, playerName);
 
             if(rs != null && rs.next()) {
-                rs.updateInt("annoucements_made", numMade);
+                rs.updateInt("announcements_made", numMade);
                 rs.close();
                 return true;
             }
         } catch(SQLException ex) {
-            logger.log(Level.SEVERE, "Could not set number of announcements made for {0} due to a SQLException:", player.getName());
+            logger.log(Level.SEVERE, "Could not set number of announcements made for {0} due to a SQLException:", playerName);
             logger.log(Level.SEVERE, ex.toString());
         }
         

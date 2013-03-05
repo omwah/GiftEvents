@@ -6,6 +6,7 @@ import java.io.File;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.Listener;
@@ -15,6 +16,7 @@ import org.bukkit.event.Listener;
  */
 public class GiftEventsPlugin extends JavaPlugin {
     private EventsInfo events_info;
+    private List<GiftEvent> events;
 
     /*
      * Enable plugin, set up commands and configuration
@@ -36,8 +38,8 @@ public class GiftEventsPlugin extends JavaPlugin {
         File db_file = new File(this.getDataFolder(), "events_info");
         events_info = new EventsInfo(this, this.getName(), db_file);
         
-        ArrayList<GiftEvent> events = new ArrayList<GiftEvent>();
-        for(String event_name : events_section.getKeys(false)) {
+        events = new ArrayList<GiftEvent>();
+        for(String event_name : events_section.getKeys(false)) {            
             ConfigurationSection event_config = events_section.getConfigurationSection(event_name);
             if(event_name.equalsIgnoreCase("birthday")) {
                 events.add(new BirthdayEvent(this.getLogger(), event_config, events_info));
@@ -64,8 +66,10 @@ public class GiftEventsPlugin extends JavaPlugin {
                 curr_cmd.setExecutor(new BirthdayCommandExecutor(this, curr_cmd));
             } else if (command_name.equalsIgnoreCase("anniversary")) {
                 curr_cmd.setExecutor(new AnniversaryCommandExecutor(this, curr_cmd));
+            } else if (command_name.equalsIgnoreCase("events")) {
+                curr_cmd.setExecutor(new EventsCommandExecutor(this, curr_cmd));
             } else {
-                getLogger().log(Level.INFO, "Uknown command name in config.yml: {0}", command_name);
+                getLogger().log(Level.INFO, "Unknown command name in config.yml: {0}", command_name);
             }
            
         }
@@ -87,6 +91,14 @@ public class GiftEventsPlugin extends JavaPlugin {
 
     public EventsInfo getEventsInfo() {
         return events_info;
+    }
+    
+    /*
+     * Get list of configured events
+     */
+    
+    public List<GiftEvent> getEvents() {
+        return events;
     }
 
     /*

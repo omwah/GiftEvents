@@ -20,17 +20,17 @@ public abstract class ConfiguredEvent implements GiftEvent {
         this.belated = eventSection.getBoolean("belated", false);
         this.announcement = eventSection.getString("announcement");
         
-        ConfigurationSection gifts_sect = eventSection.getConfigurationSection("gifts");
+        ConfigurationSection gifts_sect = eventSection.getConfigurationSection("gift");
         if(gifts_sect != null) {
             this.gifts = new GiftSet(logger, gifts_sect);
         } else {
             this.gifts = null;
-            logger.log(Level.INFO, "Could not find gifts section for event: {0}", this.getName());
+            logger.log(Level.INFO, "Could not find 'gift' section for event: {0}", this.getName());
         }
         
     }
 
-    public abstract Calendar getDate(Player player);
+    public abstract Calendar getDate(String playerName);
 
     public String getName() {
         return this.name;
@@ -40,9 +40,9 @@ public abstract class ConfiguredEvent implements GiftEvent {
         return this.belated;
     }
    
-    public String announcement(Player player) {
+    public String getAnnouncement(String playerName) {
         if (announcement != null) {
-            return String.format(announcement, player.getName(), this.getDate(player));
+            return String.format(announcement, playerName, this.getDate(playerName));
         } else {
             return null;
         }
@@ -56,7 +56,7 @@ public abstract class ConfiguredEvent implements GiftEvent {
             // Only send a message to the player if they are online and we actually
             // have a message
             if(player.isOnline() && gifts.getMessageTemplate() != null) {
-                String message = String.format(gifts.getMessageTemplate(), player.getName(), this.getDate(player));
+                String message = String.format(gifts.getMessageTemplate(), player.getName(), this.getDate(player.getName()));
                 player.sendMessage(message);
             }
             

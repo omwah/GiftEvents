@@ -17,7 +17,7 @@ import org.bukkit.inventory.ItemStack;
  * Encapsulates a set of items given to a player for an event
  */
 public class GiftSet {
-    private ArrayList<ItemStack> items;
+    private List<ItemStack> items;
     private String message;
     
     /*
@@ -30,6 +30,8 @@ public class GiftSet {
         this.message = config_def.getString("message");
         
         // Parse configuration to get items
+        items = new ArrayList<ItemStack>();
+        
         List<?> item_defs = config_def.getList("items");
         int item_count = 0;
         for(Object item : item_defs) {
