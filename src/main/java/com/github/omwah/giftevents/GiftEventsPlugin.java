@@ -3,7 +3,6 @@ package com.github.omwah.giftevents;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
 import java.io.File;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -105,7 +104,7 @@ public class GiftEventsPlugin extends JavaPlugin {
      * Return the date format specified in the configuration file for inputting values
      */
 
-    public DateFormat getInputDateFormat() {
+    public SimpleDateFormat getInputDateFormat() {
         return new SimpleDateFormat(getConfig().getString("date_format.input", "MM-dd"));
     }
     
@@ -113,7 +112,7 @@ public class GiftEventsPlugin extends JavaPlugin {
      * Return the date format specified in the configuration file for outputting dates
      */
 
-    public DateFormat getOutputDateFormat() {
+    public SimpleDateFormat getOutputDateFormat() {
         return new SimpleDateFormat(getConfig().getString("date_format.output", "MM-dd"));
     }
 }

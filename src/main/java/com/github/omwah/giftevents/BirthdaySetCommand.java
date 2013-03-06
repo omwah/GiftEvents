@@ -2,7 +2,7 @@ package com.github.omwah.giftevents;
 
 import com.github.omwah.omcommands.CommandHandler;
 import com.github.omwah.omcommands.PlayerSpecificCommand;
-import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
@@ -11,9 +11,9 @@ import org.bukkit.command.CommandSender;
 
 public class BirthdaySetCommand extends PlayerSpecificCommand {
     private final EventsInfo events_info;
-    private final DateFormat date_format;
+    private final SimpleDateFormat date_format;
     
-    public BirthdaySetCommand(EventsInfo events_info, DateFormat date_format) {
+    public BirthdaySetCommand(EventsInfo events_info, SimpleDateFormat date_format) {
         super("set");
 
         this.events_info = events_info;
@@ -40,7 +40,7 @@ public class BirthdaySetCommand extends PlayerSpecificCommand {
         try {
             date = date_format.parse(date_str);
         } catch (ParseException ex) {
-            sender.sendMessage("Could not parse date supplied: " + date_str + " using date format: " + date_format.toString());            
+            sender.sendMessage("Could not parse date supplied: " + date_str + " using date format: " + date_format.toPattern());            
             return false;
         }
         Calendar calendar = Calendar.getInstance();

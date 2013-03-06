@@ -1,6 +1,6 @@
 package com.github.omwah.giftevents;
 
-import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
@@ -14,7 +14,7 @@ import org.bukkit.entity.Player;
 public class GlobalEvent extends ConfiguredEvent {
     private final Calendar event_calendar;
     
-    public GlobalEvent(Logger logger, ConfigurationSection eventSection, DateFormat date_format) {
+    public GlobalEvent(Logger logger, ConfigurationSection eventSection, SimpleDateFormat date_format) {
         super(logger, eventSection);
                
         String date_str = eventSection.getString("date");
@@ -26,7 +26,7 @@ public class GlobalEvent extends ConfiguredEvent {
                 date = date_format.parse(date_str);
             } catch (ParseException ex) {
                 this.event_calendar = null;
-                logger.log(Level.SEVERE, "Could not parse date supplied: {0} using date format: {1}", new Object[]{date_str, date_format.toString()});
+                logger.log(Level.SEVERE, "Could not parse date supplied: {0} using date format: {1}", new Object[]{date_str, date_format.toPattern()});
                 return;
             }
             

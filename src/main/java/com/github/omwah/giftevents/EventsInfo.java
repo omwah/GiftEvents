@@ -147,7 +147,6 @@ public class EventsInfo {
         
         count_res.next();
         if (count_res.getInt(1) == 0) {
-            System.out.println("No data");
             String insert_query = 
                 "INSERT INTO past_events " +
                     "(event_name, month, day, year, player, gift_given, announcements_made) " +
@@ -198,10 +197,21 @@ public class EventsInfo {
      * Returns true of the query was succesful
      */
     public boolean setGiftGiven(GiftEvent event, String playerName, boolean given) {
+        Calendar now = Calendar.getInstance();
+        Calendar cal = event.getDate(playerName);
+
         try {
-            ResultSet rs = getPastEvent(event, playerName);
-            rs.updateBoolean("gift_given", given);
-            rs.close();
+            int given_int = given ? 1 : 0;
+            String update_query = 
+                    "UPDATE past_events " +
+                        "SET gift_given = " + given_int + " " +
+                        "WHERE " +
+                        "event_name = \"" + event.getName() + "\" AND " +
+                        "player = \"" + playerName.toLowerCase() + "\" AND " +
+                        "year = " + now.get(Calendar.YEAR) + " AND " +
+                        "month = " + cal.get(Calendar.MONTH) + " AND " +
+                        "day = " + cal.get(Calendar.DAY_OF_MONTH) + ";";
+            ResultSet update_res = db_conn.query(update_query);      
             return true;
         } catch(SQLException ex) {
             logger.log(Level.SEVERE, "Could not update gift given for {0} due to a SQLException:", playerName);
@@ -235,14 +245,21 @@ public class EventsInfo {
      * Sets how many annoucements have been made about this player for this event
      */
     public boolean setNumAnnoucementsMade(GiftEvent event, String playerName, int numMade) {
-        try {
-            ResultSet rs = getPastEvent(event, playerName);
+        Calendar now = Calendar.getInstance();
+        Calendar cal = event.getDate(playerName);
 
-            if(rs != null && rs.next()) {
-                rs.updateInt("announcements_made", numMade);
-                rs.close();
-                return true;
-            }
+        try {
+            String update_query = 
+                    "UPDATE past_events " +
+                        "SET announcements_made = " + numMade + " " +
+                        "WHERE " +
+                        "event_name = \"" + event.getName() + "\" AND " +
+                        "player = \"" + playerName.toLowerCase() + "\" AND " +
+                        "year = " + now.get(Calendar.YEAR) + " AND " +
+                        "month = " + cal.get(Calendar.MONTH) + " AND " +
+                        "day = " + cal.get(Calendar.DAY_OF_MONTH) + ";";
+            ResultSet update_res = db_conn.query(update_query);      
+            return true;
         } catch(SQLException ex) {
             logger.log(Level.SEVERE, "Could not set number of announcements made for {0} due to a SQLException:", playerName);
             logger.log(Level.SEVERE, ex.toString());
