@@ -46,7 +46,7 @@ public class EventsInfo {
 
         try {
             if(!db_conn.isTable("past_events")) {
-                db_conn.query("CREATE TABLE past_events (event_name STRING, month INT, day INT, year INT, player STRING, gift_given INT, announcements_made INT, PRIMARY KEY(event_name, month, day, year, player));");
+                db_conn.query("CREATE TABLE past_events (event_name STRING, year INT, player STRING, gift_given INT, announcements_made INT, PRIMARY KEY(event_name, year, player));");
             }
 
             if(!db_conn.isTable("birthdays")) {
@@ -134,26 +134,21 @@ public class EventsInfo {
      */
     private ResultSet getPastEvent(GiftEvent event, String playerName) throws SQLException {
         Calendar now = Calendar.getInstance();
-        Calendar cal = event.getDate(playerName);
         
         String count_query = 
                 "SELECT COUNT(*) FROM past_events WHERE " +
                     "event_name = \"" + event.getName().toLowerCase() + "\" AND " +
                     "player = \"" + playerName.toLowerCase() + "\" AND " +
-                    "year = " + now.get(Calendar.YEAR) + " AND " +
-                    "month = " + cal.get(Calendar.MONTH) + " AND " +
-                    "day = " + cal.get(Calendar.DAY_OF_MONTH) + ";";
+                    "year = " + now.get(Calendar.YEAR) + ";";
         ResultSet count_res = db_conn.query(count_query);
         
         count_res.next();
         if (count_res.getInt(1) == 0) {
             String insert_query = 
                 "INSERT INTO past_events " +
-                    "(event_name, month, day, year, player, gift_given, announcements_made) " +
+                    "(event_name, year, player, gift_given, announcements_made) " +
                     "VALUES (" +
                     "\"" + event.getName().toLowerCase() + "\", " +
-                    cal.get(Calendar.MONTH) + ", " +
-                    cal.get(Calendar.DAY_OF_MONTH) + ", " + 
                     now.get(Calendar.YEAR) + ", " +
                     "\"" + playerName.toLowerCase() + "\", " +
                     "0, 0);";
@@ -164,9 +159,7 @@ public class EventsInfo {
                 "SELECT * FROM past_events WHERE " +
                     "event_name = \"" + event.getName() + "\" AND " +
                     "player = \"" + playerName.toLowerCase() + "\" AND " +
-                    "year = " + now.get(Calendar.YEAR) + " AND " +
-                    "month = " + cal.get(Calendar.MONTH) + " AND " +
-                    "day = " + cal.get(Calendar.DAY_OF_MONTH) + ";";
+                    "year = " + now.get(Calendar.YEAR) + ";";
         ResultSet select_res = db_conn.query(select_query);      
         
         return select_res;
@@ -198,7 +191,6 @@ public class EventsInfo {
      */
     public boolean setGiftGiven(GiftEvent event, String playerName, boolean given) {
         Calendar now = Calendar.getInstance();
-        Calendar cal = event.getDate(playerName);
 
         try {
             int given_int = given ? 1 : 0;
@@ -208,9 +200,7 @@ public class EventsInfo {
                         "WHERE " +
                         "event_name = \"" + event.getName() + "\" AND " +
                         "player = \"" + playerName.toLowerCase() + "\" AND " +
-                        "year = " + now.get(Calendar.YEAR) + " AND " +
-                        "month = " + cal.get(Calendar.MONTH) + " AND " +
-                        "day = " + cal.get(Calendar.DAY_OF_MONTH) + ";";
+                        "year = " + now.get(Calendar.YEAR) + ";";
             ResultSet update_res = db_conn.query(update_query);      
             return true;
         } catch(SQLException ex) {
@@ -246,7 +236,6 @@ public class EventsInfo {
      */
     public boolean setNumAnnoucementsMade(GiftEvent event, String playerName, int numMade) {
         Calendar now = Calendar.getInstance();
-        Calendar cal = event.getDate(playerName);
 
         try {
             String update_query = 
@@ -255,9 +244,7 @@ public class EventsInfo {
                         "WHERE " +
                         "event_name = \"" + event.getName() + "\" AND " +
                         "player = \"" + playerName.toLowerCase() + "\" AND " +
-                        "year = " + now.get(Calendar.YEAR) + " AND " +
-                        "month = " + cal.get(Calendar.MONTH) + " AND " +
-                        "day = " + cal.get(Calendar.DAY_OF_MONTH) + ";";
+                        "year = " + now.get(Calendar.YEAR) + ";";
             ResultSet update_res = db_conn.query(update_query);      
             return true;
         } catch(SQLException ex) {
