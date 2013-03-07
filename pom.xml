@@ -39,7 +39,7 @@
       <artifactId>OmCommands</artifactId>
       <version>0.1.0-SNAPSHOT</version>
       <type>jar</type>
-      <scope>provided</scope>
+      <scope>compile</scope>
     </dependency>
 
     <dependency>
@@ -47,7 +47,7 @@
       <artifactId>SQLibrary</artifactId>
       <version>4.0</version>
       <type>jar</type>
-      <scope>provided</scope>
+      <scope>compile</scope>
     </dependency>
      
     <!-- Following dependency is provided by CraftBukkit -->
@@ -87,6 +87,7 @@
       </resource>
     </resources>
     <plugins>
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
@@ -97,6 +98,42 @@
           <target>1.5</target>
         </configuration>
       </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-shade-plugin</artifactId>
+        <version>2.0</version>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+            <configuration>
+              <minimizeJar>true</minimizeJar>
+              <artifactSet>
+                <includes>
+                  <include>com.github.omwah:OmCommands</include>
+                  <include>lib.PatPeter:SQLibrary</include>
+                </includes>
+              </artifactSet>
+              <filters>
+              </filters>
+              <relocations>
+                <relocation>
+                  <pattern>com.github.omwah.omcommands</pattern>
+                  <shadedPattern>shaded.com.github.omwah.omcommands</shadedPattern>
+                </relocation>
+                <relocation>
+                  <pattern>lib.PatPeter.SQLibrary</pattern>
+                  <shadedPattern>shaded.lib.PatPeter.SQLibrary</shadedPattern>
+                </relocation>
+              </relocations>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+   
     </plugins>
   </build>
 </project>
