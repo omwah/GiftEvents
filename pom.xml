@@ -4,7 +4,7 @@
 
   <groupId>com.github.omwah</groupId>
   <artifactId>GiftEvents</artifactId>
-  <version>0.1.1-SNAPSHOT</version>
+  <version>0.1.2-SNAPSHOT</version>
   <name>GiftEvents</name>
   <description>Rewards players on their birthday, their join anniversary or any other arbitraty day of the year.</description>
 
