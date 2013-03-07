@@ -42,15 +42,17 @@ public class EventsCommand extends PlayerSpecificCommand {
             String event_message = gift_event.getName();
                        
             Calendar cal = gift_event.getDate(player_name);
-            event_message += " : " + display_format.format(cal.getTime());
-            
-            if (handler.hasAdminPermission(sender)) {
-                event_message += String.format(" -- Gift Given? %b, Annoucements: %d",
-                        events_info.hasGiftBeenGiven(gift_event, player_name), 
-                        events_info.getNumAnnoucementsMade(gift_event, player_name));
+            if (cal != null) {
+                event_message += " : " + display_format.format(cal.getTime());
+
+                if (handler.hasAdminPermission(sender)) {
+                    event_message += String.format(" -- Gift Given? %b, Annoucements: %d",
+                            events_info.hasGiftBeenGiven(gift_event, player_name), 
+                            events_info.getNumAnnoucementsMade(gift_event, player_name));
+                }
+
+                sender.sendMessage(event_message);
             }
-                        
-            sender.sendMessage(event_message);
         }
         
         return true;
