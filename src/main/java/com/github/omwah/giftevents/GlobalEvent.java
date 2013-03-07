@@ -43,5 +43,10 @@ public class GlobalEvent extends ConfiguredEvent {
     public Calendar getDate(String playerName) {
         return this.event_calendar;
     }
+
+    @Override
+    public String getPermissionPath() {
+        return "giftevents.events";
+    }
     
 }

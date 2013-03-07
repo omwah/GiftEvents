@@ -19,4 +19,9 @@ public class AnniversaryEvent extends ConfiguredEvent {
     public Calendar getDate(String playerName) {
         return this.events_info.getFirstPlayedDate(playerName);
     }
+
+    @Override
+    public String getPermissionPath() {
+        return "giftevents.anniversary";
+    }
 }

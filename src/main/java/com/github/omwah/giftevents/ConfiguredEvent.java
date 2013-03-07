@@ -30,6 +30,8 @@ public abstract class ConfiguredEvent implements GiftEvent {
         
     }
 
+    public abstract String getPermissionPath();
+    
     public abstract Calendar getDate(String playerName);
 
     public String getName() {

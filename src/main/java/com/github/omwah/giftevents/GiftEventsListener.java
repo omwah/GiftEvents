@@ -37,8 +37,9 @@ public class GiftEventsListener implements Listener {
            now.get(Calendar.DAY_OF_MONTH) ==  date.get(Calendar.DAY_OF_MONTH)) {
             return true;
         } else if(belated &&
-                now.get(Calendar.MONTH) > date.get(Calendar.MONTH) &&
-                now.get(Calendar.DAY_OF_MONTH) > date.get(Calendar.DAY_OF_MONTH)) {
+                  ( (now.get(Calendar.MONTH) == date.get(Calendar.MONTH) &&
+                    now.get(Calendar.DAY_OF_MONTH) > date.get(Calendar.DAY_OF_MONTH)) ||
+                   (now.get(Calendar.MONTH) > date.get(Calendar.MONTH)) ) ) {
             return true;
         }
 
@@ -57,24 +58,25 @@ public class GiftEventsListener implements Listener {
         // applicable
         for(GiftEvent gift_event : events) {
             Calendar event_date = gift_event.getDate(playerName);
-            if(event_date != null) {                
-                if(doesDateMatch(event_date, gift_event.canGiveBelated())) {
-                    // Check if we should make an annoucement
+            if(event_date != null && player.hasPermission(gift_event.getPermissionPath())) {
+
+                // Check if we should make an annoucement, don't announce for belated events
+                if (doesDateMatch(event_date, false)) {
                     int num_annoucements = events_info.getNumAnnoucementsMade(gift_event, playerName);
                     String annoucement = gift_event.getAnnouncement(player.getName());
                     if(annoucement != null && num_annoucements < max_announcements) {
                         server.broadcastMessage(annoucement);
                         events_info.setNumAnnoucementsMade(gift_event, playerName, num_annoucements + 1);
                     }
-                    
-                    // Check if player can recieve a gift
-                    if(!events_info.hasGiftBeenGiven(gift_event, playerName)) {
-                        gift_event.giveGifts(player);
-                        events_info.setGiftGiven(gift_event, playerName, true);
-                    }
                 }
-            } else {
-                logger.log(Level.SEVERE, "Ignoring event with null date: " + gift_event.getName());
+
+                // Check if player can recieve a gift, allow belated gifts if configured
+                if(doesDateMatch(event_date, gift_event.canGiveBelated()) &&
+                        !events_info.hasGiftBeenGiven(gift_event, playerName)) {
+                    gift_event.giveGifts(player);
+                    events_info.setGiftGiven(gift_event, playerName, true);
+                }
+
             }
         }
     }

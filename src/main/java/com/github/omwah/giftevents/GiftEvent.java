@@ -15,6 +15,11 @@ public interface GiftEvent {
     public String getName();
     
     /*
+     * Permission string to check when processing event
+     */
+    public String getPermissionPath();
+    
+    /*
      * The date of the event
      */
     public Calendar getDate(String playerName);

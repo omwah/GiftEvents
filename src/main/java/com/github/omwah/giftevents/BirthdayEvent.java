@@ -20,5 +20,10 @@ public class BirthdayEvent extends ConfiguredEvent {
     public Calendar getDate(String playerName) {
         return this.events_info.getBirthday(playerName);
     }
+
+    @Override
+    public String getPermissionPath() {
+        return "giftevents.birthday";
+    }
     
 }
