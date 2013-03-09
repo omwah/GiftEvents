@@ -1,6 +1,3 @@
-# Time in minutes between annoucements should a player log off then back on
-announcement_interval: 30
-
 # How many times in one day the message will be broadcast before
 # stopping. So if a player logs on and off several times, the annoucement
 # only happens this number of times. And only if the last message was made
