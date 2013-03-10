@@ -12,6 +12,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.enchantments.EnchantmentWrapper;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 /**
  * Encapsulates a set of items given to a player for an event
@@ -63,12 +64,14 @@ public class GiftSet {
                     
                     // Use either name specified in item map, or default name, or none
                     // if neither are set
+                    ItemMeta item_meta = new_item.getItemMeta();
                     String name = (String) item_details.get("name");
                     if(name != null) {
-                        new_item.getItemMeta().setDisplayName(name);
+                        item_meta.setDisplayName(name);
                     } else if (default_name != null) {
-                        new_item.getItemMeta().setDisplayName(default_name);
+                        item_meta.setDisplayName(default_name);
                     }
+                    new_item.setItemMeta(item_meta);
                     
                     items.add(new_item);
                 } else {

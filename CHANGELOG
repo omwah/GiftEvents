@@ -1,3 +1,7 @@
+0.1.2
+-----
+* Fix setting of item name. Item meta data was being set but was not taking effect.
+
 0.1.1
 -----
 * Fix logic for determining belated events
