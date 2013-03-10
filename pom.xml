@@ -122,11 +122,11 @@
               <relocations>
                 <relocation>
                   <pattern>com.github.omwah.omcommands</pattern>
-                  <shadedPattern>shaded.com.github.omwah.omcommands</shadedPattern>
+                  <shadedPattern>giftevents.com.github.omwah.omcommands</shadedPattern>
                 </relocation>
                 <relocation>
                   <pattern>lib.PatPeter.SQLibrary</pattern>
-                  <shadedPattern>shaded.lib.PatPeter.SQLibrary</shadedPattern>
+                  <shadedPattern>giftevents.lib.PatPeter.SQLibrary</shadedPattern>
                 </relocation>
               </relocations>
             </configuration>
