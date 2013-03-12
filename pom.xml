@@ -17,12 +17,14 @@
       <id>bukkit-repo</id>
       <url>http://repo.bukkit.org/content/groups/public/</url>
     </repository>
-
     <repository>
       <id>omwah-repo</id>
       <url>http://omwah.sdf.org/maven/repo/</url>
     </repository>
-
+    <repository>
+        <id>Plugin Metrics</id>
+        <url>http://repo.mcstats.org/content/repositories/public</url>
+    </repository>   
   </repositories>
 
   <dependencies>
@@ -49,7 +51,14 @@
       <type>jar</type>
       <scope>compile</scope>
     </dependency>
-     
+    
+    <dependency>
+        <groupId>org.mcstats.bukkit</groupId>
+        <artifactId>metrics</artifactId>
+        <version>R6</version>
+        <scope>compile</scope>
+    </dependency>
+         
     <!-- Following dependency is provided by CraftBukkit -->
     <dependency>
       <groupId>com.google.guava</groupId>
@@ -115,6 +124,7 @@
                 <includes>
                   <include>com.github.omwah:OmCommands</include>
                   <include>lib.PatPeter:SQLibrary</include>
+                  <include>org.mcstats.bukkit</include>
                 </includes>
               </artifactSet>
               <filters>
@@ -128,6 +138,10 @@
                   <pattern>lib.PatPeter.SQLibrary</pattern>
                   <shadedPattern>giftevents.lib.PatPeter.SQLibrary</shadedPattern>
                 </relocation>
+                <relocation>
+                  <pattern>org.mcstats</pattern>
+                  <shadedPattern>com.github.omwah.GiftEvents.mcstats</shadedPattern>
+                </relocation>                
               </relocations>
             </configuration>
           </execution>

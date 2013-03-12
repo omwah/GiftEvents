@@ -3,12 +3,14 @@ package com.github.omwah.giftevents;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
 import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.Listener;
+import org.mcstats.Metrics;
 
 /*
  * This is the main class of GiftEventsPlugin
@@ -73,6 +75,13 @@ public class GiftEventsPlugin extends JavaPlugin {
            
         }
 
+        // Try and send metrics to MCStats
+        try {
+            Metrics metrics = new Metrics(this);
+            metrics.start();
+        } catch (IOException e) {
+            getLogger().log(Level.SEVERE, "Could not send data to MCStats!");
+        }
     }
     
     /*
