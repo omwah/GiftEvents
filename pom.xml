@@ -19,7 +19,7 @@
     </repository>
     <repository>
       <id>omwah-repo</id>
-      <url>http://omwah.sdf.org/maven/repo/</url>
+      <url>http://omwah.sdf.org/maven/repo/snapshots/</url>
     </repository>
     <repository>
         <id>Plugin Metrics</id>
