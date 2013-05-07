@@ -76,7 +76,10 @@ public class GiftEventsPlugin extends JavaPlugin {
      * Loads the events list from the config file
      */
     
-    private boolean loadEvents() {
+    public boolean loadEvents() {
+        // Reload the configuration in case this is being called to reload the events
+        this.reloadConfig();
+        
         // Create events objects from configuration file
         ConfigurationSection events_section = this.getConfig().getConfigurationSection("events");
         if (events_section == null) {
