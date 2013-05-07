@@ -34,54 +34,25 @@ public class GiftEventsPlugin extends JavaPlugin {
         // save the configuration file
         saveDefaultConfig();
                
-        // Create events objects from configuration file
-        ConfigurationSection events_section = this.getConfig().getConfigurationSection("events");
-        if (events_section == null) {
-            this.getLogger().log(Level.SEVERE, "events section not found in configuration, could not enable events");
-            return;
-        }
-        
         // Load event information database for keeping track of 
         // birthdays and whether gifts have been handed out
         File db_file = new File(this.getDataFolder(), "events_info");
         boolean first_join_gift = this.getConfig().getBoolean("first_join_gift", false);
         events_info = new EventsInfo(this, this.getName(), db_file, first_join_gift);
         
-        events = new ArrayList<GiftEvent>();
-        for(String event_name : events_section.getKeys(false)) {            
-            ConfigurationSection event_config = events_section.getConfigurationSection(event_name);
-            if(event_name.equalsIgnoreCase("birthday")) {
-                events.add(new BirthdayEvent(this.getLogger(), event_config, events_info));
-            } else if(event_name.equalsIgnoreCase("anniversary")) {
-                events.add(new AnniversaryEvent(this.getLogger(), event_config, events_info));
-            } else {
-                events.add(new GlobalEvent(this.getLogger(), event_config, this.getInputDateFormat()));
-            }
+        // Load list of events from the config file        
+        if (!this.loadEvents()) {
+            this.getLogger().log(Level.SEVERE, "events section not found in configuration, could not enable events");
+            return;
         }
-
+                
         // Create the Listener for giving gifts to logging in players
         int max_announcements = this.getConfig().getInt("maximum_announcements", 5);
         Listener login_listener = new GiftEventsListener(this.getLogger(), events, events_info, this.getServer(), max_announcements);
         this.getServer().getPluginManager().registerEvents(login_listener, this);
         
-        // Load up the list of commands in the plugin.yml and register each of these
-        // This makes is simpler to update the command names that this Plugin responds
-        // to just by editing plugin.yml
-        for(String command_name : this.getDescription().getCommands().keySet()) {
-            // set the command executor for the Command
-            PluginCommand curr_cmd = this.getCommand(command_name);
-            
-            if (command_name.equalsIgnoreCase("birthday")) {
-                curr_cmd.setExecutor(new BirthdayCommandExecutor(this, curr_cmd));
-            } else if (command_name.equalsIgnoreCase("anniversary")) {
-                curr_cmd.setExecutor(new AnniversaryCommandExecutor(this, curr_cmd));
-            } else if (command_name.equalsIgnoreCase("events")) {
-                curr_cmd.setExecutor(new EventsCommandExecutor(this, curr_cmd));
-            } else {
-                getLogger().log(Level.INFO, "Unknown command name in config.yml: {0}", command_name);
-            }
-           
-        }
+        // Load commands for using the plugin
+        loadCommands();
 
         // Try and send metrics to MCStats
         try {
@@ -101,6 +72,54 @@ public class GiftEventsPlugin extends JavaPlugin {
         events_info.close();        
     }
 
+    /*
+     * Loads the events list from the config file
+     */
+    
+    private boolean loadEvents() {
+        // Create events objects from configuration file
+        ConfigurationSection events_section = this.getConfig().getConfigurationSection("events");
+        if (events_section == null) {
+            return false;
+        }
+        
+        events = new ArrayList<GiftEvent>();
+        for(String event_name : events_section.getKeys(false)) {            
+            ConfigurationSection event_config = events_section.getConfigurationSection(event_name);
+            if(event_name.equalsIgnoreCase("birthday")) {
+                events.add(new BirthdayEvent(this.getLogger(), event_config, events_info));
+            } else if(event_name.equalsIgnoreCase("anniversary")) {
+                events.add(new AnniversaryEvent(this.getLogger(), event_config, events_info));
+            } else {
+                events.add(new GlobalEvent(this.getLogger(), event_config, this.getInputDateFormat()));
+            }
+        }
+        
+        return true;
+    }
+    
+    /*
+     * Loads commands used by the plugin
+     */
+    private void loadCommands() {
+        // Load up the list of commands based on what is actually in the plugin.yml
+        for(String command_name : this.getDescription().getCommands().keySet()) {
+            // set the command executor for the Command
+            PluginCommand curr_cmd = this.getCommand(command_name);
+            
+            if (command_name.equalsIgnoreCase("birthday")) {
+                curr_cmd.setExecutor(new BirthdayCommandExecutor(this, curr_cmd));
+            } else if (command_name.equalsIgnoreCase("anniversary")) {
+                curr_cmd.setExecutor(new AnniversaryCommandExecutor(this, curr_cmd));
+            } else if (command_name.equalsIgnoreCase("events")) {
+                curr_cmd.setExecutor(new EventsCommandExecutor(this, curr_cmd));
+            } else {
+                getLogger().log(Level.INFO, "Unknown command name in config.yml: {0}", command_name);
+            }
+           
+        }        
+    }
+    
     /*
      * Returns the EventsInfo databvase  
      */
