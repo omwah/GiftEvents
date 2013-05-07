@@ -8,13 +8,13 @@ import java.util.List;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class EventsCommand extends PlayerSpecificCommand {
+public class EventsListCommand extends PlayerSpecificCommand {
     private final List<GiftEvent> events;
     private final EventsInfo events_info;
     private final DateFormat display_format;
 
-    public EventsCommand(List<GiftEvent> events, EventsInfo events_info, DateFormat display_format) {
-        super("events");
+    public EventsListCommand(List<GiftEvent> events, EventsInfo events_info, DateFormat display_format) {
+        super("list");
 
         this.events = events;
         this.events_info = events_info;
