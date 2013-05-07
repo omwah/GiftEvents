@@ -37,7 +37,8 @@ public class GiftEventsPlugin extends JavaPlugin {
         // Load event information database for keeping track of 
         // birthdays and whether gifts have been handed out
         File db_file = new File(this.getDataFolder(), "events_info");
-        events_info = new EventsInfo(this, this.getName(), db_file);
+        boolean first_join_gift = this.getConfig().getBoolean("first_join_gift", false);
+        events_info = new EventsInfo(this, this.getName(), db_file, first_join_gift);
         
         events = new ArrayList<GiftEvent>();
         for(String event_name : events_section.getKeys(false)) {            

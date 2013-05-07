@@ -10,6 +10,10 @@ date_format:
   
   # Format of dates when displaying them to the user
   output: "MMM dd"
+  
+# Allows players who join the server for the first time to get the 
+# anniversary present
+first_join_gift: False
 
 # The events: section has a sub-section for each configured event.
 #

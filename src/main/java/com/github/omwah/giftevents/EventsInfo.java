@@ -20,13 +20,15 @@ public class EventsInfo {
     private final JavaPlugin plugin;
     private final SQLite db_conn;
     private final Logger logger;
+    private final boolean first_join_gift;
 
     /*
      * Creates a new instance at the given filename, prefix should be the Plugin's name  
      */
-    public EventsInfo(JavaPlugin plugin, String prefix, File filename) {
+    public EventsInfo(JavaPlugin plugin, String prefix, File filename, boolean firstJoinGift) {
         this.plugin = plugin;
         this.logger = plugin.getLogger();
+        this.first_join_gift = firstJoinGift;
 
         try {
             db_conn = new SQLite(logger, prefix, filename.getParent(), filename.getName());
@@ -113,8 +115,19 @@ public class EventsInfo {
      */
     public Calendar getFirstPlayedDate(OfflinePlayer playerObj) {
         Calendar fp_cal = Calendar.getInstance();
+        Calendar now = Calendar.getInstance();
         fp_cal.setTime(new Date(playerObj.getFirstPlayed()));
-        return fp_cal;
+        
+        // Don't return date if the player has just joined the server
+        // prevents them from getting gifts when they first join
+        if(!first_join_gift &&
+           now.get(Calendar.MONTH) ==  fp_cal.get(Calendar.MONTH) &&
+           now.get(Calendar.DAY_OF_MONTH) ==  fp_cal.get(Calendar.DAY_OF_MONTH) &&
+           now.get(Calendar.YEAR) == fp_cal.get(Calendar.YEAR)) {
+            return null;
+        } else {
+            return fp_cal;
+        }
     }
 
     /*

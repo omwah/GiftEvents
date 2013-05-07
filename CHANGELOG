@@ -1,6 +1,8 @@
 0.1.4
 -----
 * Add the possibility of applying damage to items when they are given
+* Turn off awarding of players the anniversary present on their first join.
+  Can be re-enabled through a config file option.
 
 0.1.3
 -----
