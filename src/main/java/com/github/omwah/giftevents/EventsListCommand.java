@@ -4,7 +4,10 @@ import com.github.omwah.omcommands.CommandHandler;
 import com.github.omwah.omcommands.PlayerSpecificCommand;
 import java.text.DateFormat;
 import java.util.Calendar;
+import java.util.Formatter;
 import java.util.List;
+import org.apache.commons.lang.StringUtils;
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -21,7 +24,7 @@ public class EventsListCommand extends PlayerSpecificCommand {
         this.display_format = display_format;
 
         setDescription("Get a list of events configured on this server");
-        setUsage("/%s");
+        setUsage("/%s [player_name]");
         setArgumentRange(0, 1);
         setIdentifiers(this.getName());
         setPermission("giftevents.events");
@@ -29,29 +32,40 @@ public class EventsListCommand extends PlayerSpecificCommand {
 
     @Override
     public boolean execute(CommandHandler handler, CommandSender sender, String label, String identifier, String[] args) {
-        String player_name = getDestPlayer(handler, sender, args, 0);
-        if (player_name == null) {
-            // Problem getting player name, reported to user
-            return false;
+        // Player name is optional and some events might not need
+        // a player name to get their date, such as global events
+        String player_name = null;
+        if (args.length > 0 || sender instanceof Player) {
+            player_name = getDestPlayer(handler, sender, args, 0);
+            if (player_name == null) {
+                // Problem getting player name, reported to user
+                return false;
+            }
         }
         
-        sender.sendMessage("GiftEvents");
-        sender.sendMessage("==========");
+        boolean admin_output = handler.hasAdminPermission(sender) && player_name != null;
+                
+        // Add 4 to width centered due to chat colors
+        sender.sendMessage(ChatColor.RED + "---- [ " + ChatColor.WHITE + "Events" + ChatColor.RED + " ] ----");
+        
+        if(admin_output) {
+            sender.sendMessage(ChatColor.GRAY + "Name : Date : Has Gift : Announcements");
+        } else {
+            sender.sendMessage(ChatColor.GRAY + "Name : Date");
+        }
 
         for(GiftEvent gift_event : events) {
-            String event_message = gift_event.getName();
                        
             Calendar cal = gift_event.getDate(player_name);
             if (cal != null) {
-                event_message += " : " + display_format.format(cal.getTime());
-
-                if (handler.hasAdminPermission(sender)) {
-                    event_message += String.format(" -- Gift Given? %b, Annoucements: %d",
-                            events_info.hasGiftBeenGiven(gift_event, player_name), 
-                            events_info.getNumAnnoucementsMade(gift_event, player_name));
+                String event_message = gift_event.getName() + " : " + display_format.format(cal.getTime());
+                
+                if (admin_output) {
+                     event_message += " : " + events_info.hasGiftBeenGiven(gift_event, player_name) + " : " +
+                             events_info.getNumAnnoucementsMade(gift_event, player_name);                
                 }
-
-                sender.sendMessage(event_message);
+                
+                sender.sendMessage(event_message);                
             }
         }
         

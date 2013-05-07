@@ -78,6 +78,11 @@ public class EventsInfo {
      * Gets the birthday for a player, for the current year
      */
     public Calendar getBirthday(String playerName) {
+        // Return null if no player name is specified
+        if(playerName == null) {
+            return null;
+        }
+        
         Calendar now = Calendar.getInstance();
         try {
             ResultSet rs = db_conn.query("SELECT month, day FROM birthdays WHERE player = \"" + playerName.toLowerCase() + "\";");
@@ -134,6 +139,11 @@ public class EventsInfo {
      * Get the first played date for a player based on their player name
      */
     public Calendar getFirstPlayedDate(String playerName) {
+        // Return null if no player name is specified
+        if(playerName == null) {
+            return null;
+        }
+
         OfflinePlayer player_obj = plugin.getServer().getOfflinePlayer(playerName.toLowerCase());
         if (player_obj != null) {
             return getFirstPlayedDate(player_obj);
