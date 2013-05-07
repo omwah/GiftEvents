@@ -50,7 +50,14 @@ public class GiftSet {
                         amount = new Integer(1);
                     }
                     
-                    ItemStack new_item = new ItemStack(item_id, amount);
+                    Integer damage = (Integer) item_details.get("damage");
+                    
+                    ItemStack new_item;
+                    if(damage != null) {
+                        new_item = new ItemStack(item_id, amount, damage.shortValue());
+                    } else {
+                        new_item = new ItemStack(item_id, amount);
+                    }
                     
                     // Enchantments are optional
                     Map<Integer, Integer> enchantments = (Map<Integer, Integer>) item_details.get("enchantments");

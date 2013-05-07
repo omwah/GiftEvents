@@ -38,6 +38,7 @@ date_format:
 # enchantments - Optional associative array with id as the key and level as the value
 # amount - Optional number of the item to give
 # name - Optional name to give to item instead of one specified in gift section
+# damage - Optional damage/durability to assign to the given item
 
 # Announcement and gift messages are formatted with the Java String Formatter
 # and passed player_name, and a Calendar date
