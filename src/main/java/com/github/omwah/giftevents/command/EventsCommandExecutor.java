@@ -1,5 +1,6 @@
-package com.github.omwah.giftevents;
+package com.github.omwah.giftevents.command;
 
+import com.github.omwah.giftevents.GiftEventsPlugin;
 import com.github.omwah.omcommands.NestedCommandExecutor;
 import com.github.omwah.omcommands.PluginCommand;
 import java.util.ArrayList;
@@ -10,12 +11,12 @@ import org.bukkit.plugin.java.JavaPlugin;
 /*
  * Handles dispatching of commands
  */
-public class AnniversaryCommandExecutor extends NestedCommandExecutor {
+public class EventsCommandExecutor extends NestedCommandExecutor {
 
     /**
      *  Initialize class through super class constructor
      */
-    public AnniversaryCommandExecutor(GiftEventsPlugin plugin, Command cmd) {
+    public EventsCommandExecutor(GiftEventsPlugin plugin, Command cmd) {
         super(plugin, cmd, "giftevents.admin");
     }
     
@@ -29,7 +30,7 @@ public class AnniversaryCommandExecutor extends NestedCommandExecutor {
         // Set up which subcommands of the main command are available
         ArrayList<PluginCommand> sub_cmd_list = new ArrayList<PluginCommand>();
         
-        sub_cmd_list.add(new AnniversaryCommand(gift_events.getEventsInfo(), gift_events.getOutputDateFormat()));
+        sub_cmd_list.add(new EventsListCommand(gift_events.getEvents(), gift_events.getEventsInfo(), gift_events.getOutputDateFormat()));
 
         return sub_cmd_list;
     }

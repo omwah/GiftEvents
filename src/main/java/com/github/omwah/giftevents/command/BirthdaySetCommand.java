@@ -1,5 +1,6 @@
-package com.github.omwah.giftevents;
+package com.github.omwah.giftevents.command;
 
+import com.github.omwah.giftevents.EventsInfo;
 import com.github.omwah.omcommands.CommandHandler;
 import com.github.omwah.omcommands.PlayerSpecificCommand;
 import java.text.SimpleDateFormat;

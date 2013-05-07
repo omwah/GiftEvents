@@ -1,5 +1,8 @@
 package com.github.omwah.giftevents;
 
+import com.github.omwah.giftevents.command.BirthdayCommandExecutor;
+import com.github.omwah.giftevents.command.EventsCommandExecutor;
+import com.github.omwah.giftevents.command.AnniversaryCommandExecutor;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
 import java.io.File;
