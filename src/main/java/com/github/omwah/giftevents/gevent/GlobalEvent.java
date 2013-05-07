@@ -1,4 +1,4 @@
-package com.github.omwah.giftevents;
+package com.github.omwah.giftevents.gevent;
 
 import java.text.SimpleDateFormat;
 import java.text.ParseException;

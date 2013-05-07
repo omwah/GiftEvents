@@ -1,5 +1,6 @@
-package com.github.omwah.giftevents;
+package com.github.omwah.giftevents.gevent;
 
+import com.github.omwah.giftevents.GiftSet;
 import java.util.Calendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;

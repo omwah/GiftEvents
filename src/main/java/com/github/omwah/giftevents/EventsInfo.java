@@ -1,5 +1,6 @@
 package com.github.omwah.giftevents;
 
+import com.github.omwah.giftevents.gevent.GiftEvent;
 import java.io.File;
 import java.sql.ResultSet;
 import java.sql.SQLException;

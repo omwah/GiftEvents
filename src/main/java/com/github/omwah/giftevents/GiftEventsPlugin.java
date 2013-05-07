@@ -1,5 +1,9 @@
 package com.github.omwah.giftevents;
 
+import com.github.omwah.giftevents.gevent.BirthdayEvent;
+import com.github.omwah.giftevents.gevent.AnniversaryEvent;
+import com.github.omwah.giftevents.gevent.GiftEvent;
+import com.github.omwah.giftevents.gevent.GlobalEvent;
 import com.github.omwah.giftevents.command.BirthdayCommandExecutor;
 import com.github.omwah.giftevents.command.EventsCommandExecutor;
 import com.github.omwah.giftevents.command.AnniversaryCommandExecutor;

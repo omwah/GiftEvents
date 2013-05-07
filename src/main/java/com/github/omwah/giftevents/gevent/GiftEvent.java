@@ -1,4 +1,4 @@
-package com.github.omwah.giftevents;
+package com.github.omwah.giftevents.gevent;
 
 import java.util.Calendar;
 import org.bukkit.entity.Player;

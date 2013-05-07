@@ -1,5 +1,6 @@
 package com.github.omwah.giftevents;
 
+import com.github.omwah.giftevents.gevent.GiftEvent;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
