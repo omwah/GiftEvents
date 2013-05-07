@@ -15,20 +15,16 @@ import org.bukkit.entity.Player;
 /*
  */
 public class GiftEventsListener implements Listener {
-    private final Logger logger;
-    private final List<GiftEvent> events;
+    private final GiftEventsPlugin plugin;
     private final EventsInfo events_info;
-    private final Server server;
     private final int max_announcements;
 
     /*
      * Construct listener
      */
-    public GiftEventsListener(Logger logger, List<GiftEvent> events, EventsInfo events_info, Server server, int max_announcements) {
-        this.logger = logger;
-        this.events = events;
-        this.events_info = events_info;
-        this.server = server;
+    public GiftEventsListener(GiftEventsPlugin plugin, int max_announcements) {
+        this.plugin = plugin;
+        this.events_info = plugin.getEventsInfo();
         this.max_announcements = max_announcements;
     }
     
@@ -57,7 +53,7 @@ public class GiftEventsListener implements Listener {
         
         // For each event check if it applies and give a gift if
         // applicable
-        for(GiftEvent gift_event : events) {
+        for(GiftEvent gift_event : plugin.getEvents()) {
             Calendar event_date = gift_event.getDate(playerName);
             if(event_date != null && player.hasPermission(gift_event.getPermissionPath())) {
 
@@ -66,7 +62,7 @@ public class GiftEventsListener implements Listener {
                     int num_annoucements = events_info.getNumAnnoucementsMade(gift_event, playerName);
                     String annoucement = gift_event.getAnnouncement(player.getName());
                     if(annoucement != null && num_annoucements < max_announcements) {
-                        server.broadcastMessage(annoucement);
+                        plugin.getServer().broadcastMessage(annoucement);
                         events_info.setNumAnnoucementsMade(gift_event, playerName, num_annoucements + 1);
                     }
                 }

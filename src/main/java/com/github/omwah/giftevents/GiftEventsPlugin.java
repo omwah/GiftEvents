@@ -48,7 +48,7 @@ public class GiftEventsPlugin extends JavaPlugin {
                 
         // Create the Listener for giving gifts to logging in players
         int max_announcements = this.getConfig().getInt("maximum_announcements", 5);
-        Listener login_listener = new GiftEventsListener(this.getLogger(), events, events_info, this.getServer(), max_announcements);
+        Listener login_listener = new GiftEventsListener(this, max_announcements);
         this.getServer().getPluginManager().registerEvents(login_listener, this);
         
         // Load commands for using the plugin

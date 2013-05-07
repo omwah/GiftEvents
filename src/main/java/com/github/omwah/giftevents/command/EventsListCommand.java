@@ -1,5 +1,6 @@
 package com.github.omwah.giftevents.command;
 
+import com.github.omwah.giftevents.GiftEventsPlugin;
 import com.github.omwah.giftevents.EventsInfo;
 import com.github.omwah.giftevents.gevent.GiftEvent;
 import com.github.omwah.omcommands.CommandHandler;
@@ -12,15 +13,15 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class EventsListCommand extends PlayerSpecificCommand {
-    private final List<GiftEvent> events;
+    private final GiftEventsPlugin plugin;
     private final EventsInfo events_info;
     private final DateFormat display_format;
 
-    public EventsListCommand(List<GiftEvent> events, EventsInfo events_info, DateFormat display_format) {
+    public EventsListCommand(GiftEventsPlugin plugin, DateFormat display_format) {
         super("list");
 
-        this.events = events;
-        this.events_info = events_info;
+        this.plugin = plugin;
+        this.events_info = plugin.getEventsInfo();
         this.display_format = display_format;
 
         setDescription("Get a list of events configured on this server");
@@ -54,7 +55,7 @@ public class EventsListCommand extends PlayerSpecificCommand {
             sender.sendMessage(ChatColor.GRAY + "Name : Date");
         }
 
-        for(GiftEvent gift_event : events) {
+        for(GiftEvent gift_event : plugin.getEvents()) {
                        
             Calendar cal = gift_event.getDate(player_name);
             if (cal != null) {
