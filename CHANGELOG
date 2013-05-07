@@ -3,6 +3,8 @@
 * Add the possibility of applying damage to items when they are given
 * Turn off awarding of players the anniversary present on their first join.
   Can be re-enabled through a config file option.
+* Add parsing of item and enchanment ids using strings from the Material
+  and enchantment classes
 
 0.1.3
 -----

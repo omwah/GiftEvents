@@ -38,8 +38,11 @@ first_join_gift: False
 
 # Explanation of items:
 # items: is a list of associative arrays with each associative array having:
-# id - Item id
-# enchantments - Optional associative array with id as the key and level as the value
+# id - Indicates which item to use. This can be the numerial id of the object
+#    or a string from the Bukkit Material enum
+# enchantments - Optional associative array with id as the key and 
+#    level as the value. The id can either be an integer enchantment id or
+#    a string with a name from the Bukkit Enchantment enum
 # amount - Optional number of the item to give
 # name - Optional name to give to item instead of one specified in gift section
 # damage - Optional damage/durability to assign to the given item
@@ -62,7 +65,7 @@ events:
     announcement: "Today is %1$s's first play anniversary. Player since %2$tm %2$te,%2$tY"
     gift:
       items:
-        - { id: 264, enchantments: {48: 1}, amount: 5 } #  Diamond w/ Power I
+        - { id: DIAMOND, enchantments: {48: 1}, amount: 5 } #  Diamond w/ Power I
       name: "Happy Anniversary!"
       message: "Happy First Play Anniversary %1$s, check your inventory for a gift"
 
@@ -71,7 +74,7 @@ events:
     belated: False
     gift:
       items:
-        - { id: 263, enchantments: {7: 1} } # Coal w/ Thorns I
+        - { id: COAL, enchantments: {THORNS: 1} } # Coal w/ Thorns I
       name: "You've been naughty"
       message: "Merry Christmas %1$s, check your inventory for a gift"
 

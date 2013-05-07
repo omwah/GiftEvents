@@ -7,8 +7,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.enchantments.EnchantmentWrapper;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -21,6 +23,79 @@ public class GiftSet {
     private List<ItemStack> items;
     private String message;
     
+    /*
+     * Try and parse the item id from the item details map
+     */
+    private Integer parseItemId(Map<String, ?> itemDetails) {
+        Object id_obj = itemDetails.get("id");
+        
+        // Try and parse the item id either as an integer or string
+        Integer item_id = null;
+        if(id_obj instanceof Integer) {
+            item_id = (Integer) id_obj;
+        } else if(id_obj instanceof String) {
+            Material material_tmp = Material.valueOf((String) id_obj);
+            if (material_tmp != null) {
+                item_id = new Integer(material_tmp.getId());
+            } else {
+                item_id = null;
+            }
+        }
+        
+        return item_id;
+    }
+    
+    /*
+     * Try and parse the amount of the item
+     */
+    private Integer parseAmount(Map<String, ?> itemDetails) {
+        // amount is optional, default amount is 1
+        Integer amount = (Integer) itemDetails.get("amount");
+
+        if(amount == null) {
+            amount = new Integer(1);
+        }
+        return amount;
+    }
+    
+    /*
+     * Try and parse the damage of the item
+     */
+    private Integer parseDamage(Map<String, ?> itemDetails) {
+        Integer damage = (Integer) itemDetails.get("damage");
+        return damage;
+    }
+    
+    /*
+     * Try and parse and enchantment mapping
+     */
+    
+    private Integer parseEnchantmentId(Object ench_obj) {
+        Integer ench_id = null;
+        if(ench_obj instanceof Integer) {
+            ench_id = (Integer) ench_obj;
+        } else if(ench_obj instanceof String) {
+            Enchantment ench_tmp = Enchantment.getByName((String) ench_obj);
+            if(ench_tmp != null) {
+                ench_id = new Integer(ench_tmp.getId());
+            } else {
+                ench_id = null;
+            }
+        }
+
+        return ench_id;
+    }
+    
+    private Integer parseEnchantmentLevel(Object level_obj) {
+        Integer level_int = null;
+        if (level_obj instanceof Integer) {
+            level_int = (Integer) level_obj;
+        } else if(level_obj instanceof String) {
+            level_int = new Integer((String) level_obj);
+        }
+        return level_int;
+    }
+
     /*
      * Creates class from a gift: section of the config.yaml
      */
@@ -41,16 +116,18 @@ public class GiftSet {
             
             if (item instanceof Map) {
                 Map<String, ?> item_details = (Map<String, ?>) item;
-                Integer item_id = (Integer) item_details.get("id");
+
+                // Try and parse the item id either as an integer or string
+                Integer item_id = parseItemId(item_details);
+                
+                // Log an error below if item_id is null
                 if (item_id != null) {
                     // amount is optional, default amount is 1
-                    Integer amount = (Integer) item_details.get("amount");
+                    Integer amount = parseAmount(item_details);
                     
-                    if(amount == null) {
-                        amount = new Integer(1);
-                    }
-                    
-                    Integer damage = (Integer) item_details.get("damage");
+                    // Damage is optional, use correct constructor
+                    // that includes damage
+                    Integer damage = parseDamage(item_details);
                     
                     ItemStack new_item;
                     if(damage != null) {
@@ -60,12 +137,17 @@ public class GiftSet {
                     }
                     
                     // Enchantments are optional
-                    Map<Integer, Integer> enchantments = (Map<Integer, Integer>) item_details.get("enchantments");
+                    Map<Object, Object> enchantments = (Map<Object, Object>) item_details.get("enchantments");
                     
                     if (enchantments != null) {
-                        for(Integer ench_id : enchantments.keySet()) {
-                            Integer level = enchantments.get(ench_id);
-                            new_item.addUnsafeEnchantment(new EnchantmentWrapper(ench_id), level);
+                        for(Object ench_obj : enchantments.keySet()) {
+                            Integer ench_id = parseEnchantmentId(ench_obj);
+                            if(ench_id != null) {
+                                Integer level = parseEnchantmentLevel(enchantments.get(ench_obj));
+                                new_item.addUnsafeEnchantment(new EnchantmentWrapper(ench_id), level);
+                            } else {
+                                logger.log(Level.WARNING, "In {0} section enchantment id incorrect for item #{1}", new Object[]{config_def.getName(), item_count});
+                            }
                         }
                     }
                     
@@ -82,7 +164,7 @@ public class GiftSet {
                     
                     items.add(new_item);
                 } else {
-                    logger.log(Level.WARNING, "In {0} section id missing for item #{1}", new Object[]{config_def.getName(), item_count});
+                    logger.log(Level.WARNING, "In {0} section id missing or incorrect for item #{1}", new Object[]{config_def.getName(), item_count});
                 } // end if item_id != null
             } else {
                 logger.log(Level.WARNING, "In {0} section expected Map instance for item #{1} instead of: {2}", new Object[]{config_def.getName(), item_count, item.getClass()});
