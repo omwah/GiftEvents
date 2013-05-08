@@ -16,6 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.Listener;
 import org.mcstats.Metrics;
 
@@ -25,6 +27,7 @@ import org.mcstats.Metrics;
 public class GiftEventsPlugin extends JavaPlugin {
     private EventsInfo events_info;
     private List<GiftEvent> events;
+    private File events_config_file;
 
     /*
      * Enable plugin, set up commands and configuration
@@ -40,7 +43,8 @@ public class GiftEventsPlugin extends JavaPlugin {
         boolean first_join_gift = this.getConfig().getBoolean("first_join_gift", false);
         events_info = new EventsInfo(this, this.getName(), db_file, first_join_gift);
         
-        // Load list of events from the config file        
+        // Load list of events from the config file
+        this.events_config_file = new File(this.getDataFolder(), "config.yml");        
         if (!this.loadEvents()) {
             this.getLogger().log(Level.SEVERE, "events section not found in configuration, could not enable events");
             return;
@@ -78,10 +82,16 @@ public class GiftEventsPlugin extends JavaPlugin {
     
     public boolean loadEvents() {
         // Reload the configuration in case this is being called to reload the events
-        this.reloadConfig();
+        YamlConfiguration events_config;
+        events_config = YamlConfiguration.loadConfiguration(this.events_config_file); 
+        
+        if(events_config == null) {
+            getLogger().log(Level.INFO, "Error parsing config file: {0}", this.events_config_file);
+            return false;
+        }
         
         // Create events objects from configuration file
-        ConfigurationSection events_section = this.getConfig().getConfigurationSection("events");
+        ConfigurationSection events_section = events_config.getConfigurationSection("events");
         if (events_section == null) {
             return false;
         }
