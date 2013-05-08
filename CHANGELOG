@@ -5,7 +5,10 @@
   Can be re-enabled through a config file option.
 * Add parsing of item and enchanment ids using strings from the Material
   and enchantment classes
-* Add /events reload administrative command to reread events from the config
+* Moved definition of events into a seperate file: events.yml. The plugin
+  with automatically migrate existing events from the config.yml to the
+  new file. However comments may get lost in the operation.
+* Added /events reload administrative command to reread events from the config
   file.
 
 0.1.3

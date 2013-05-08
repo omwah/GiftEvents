@@ -34,8 +34,12 @@ public class GiftEventsPlugin extends JavaPlugin {
      */
     @Override
     public void onEnable() {
-        // save the configuration file
+        // Save the default config file from and events file from the resource
+        // directory inside the plugin
         saveDefaultConfig();
+        
+        this.events_config_file = new File(this.getDataFolder(), this.getConfig().getString("events_file", "events.yml"));     
+        saveDefaultEventsFile();
                
         // Load event information database for keeping track of 
         // birthdays and whether gifts have been handed out
@@ -43,8 +47,7 @@ public class GiftEventsPlugin extends JavaPlugin {
         boolean first_join_gift = this.getConfig().getBoolean("first_join_gift", false);
         events_info = new EventsInfo(this, this.getName(), db_file, first_join_gift);
         
-        // Load list of events from the config file
-        this.events_config_file = new File(this.getDataFolder(), "config.yml");        
+        // Load list of events from the config file   
         if (!this.loadEvents()) {
             this.getLogger().log(Level.SEVERE, "events section not found in configuration, could not enable events");
             return;
@@ -74,6 +77,48 @@ public class GiftEventsPlugin extends JavaPlugin {
     public void onDisable() {
         // Close database connection
         events_info.close();        
+    }
+    
+    /*
+     * Loads the default events file from the resource directory
+     * Also makes sure to migrate any events from the config file intp
+     * a seperate config file if migrating from an earlier version
+     * where the events were kept inside the config.yml file.
+     */
+    void saveDefaultEventsFile() {
+        ConfigurationSection existing_events_section = this.getConfig().getConfigurationSection("events");
+        if(existing_events_section != null && !this.events_config_file.exists()) {
+            // Migrate events from old config file, only if the events
+            // file does not yet exist
+            getLogger().log(Level.INFO, "Migrating events section from config.yml to: {0}", this.events_config_file);
+            
+            YamlConfiguration events_config = new YamlConfiguration();
+            events_config.set("events", existing_events_section);
+            
+            try {
+                events_config.save(this.events_config_file);
+                
+                // Remove events section from config file
+                this.getConfig().set("events", null);
+                this.saveConfig();
+            } catch (IOException ex) {
+                getLogger().info("Error saving new events file, falling back to using config.yml");
+                
+                // Fall back to config file
+                this.events_config_file = new File(this.getDataFolder(), "config.yml");
+            }
+
+        } else if (!this.events_config_file.exists()) {
+            File resource_file = new File(this.getDataFolder(), "events.yml");
+            
+            getLogger().log(Level.INFO, "Creating events file from default: {0}", resource_file.getName());
+            saveResource(resource_file.getName(), false);
+            
+            // Rename just in case configured file name is different
+            resource_file.renameTo(this.events_config_file);
+        } else if (existing_events_section != null) {
+            getLogger().log(Level.SEVERE, "An events section exists in config.yml but an events file already exists in the plugin direction and will not be overwritten.");
+        }
     }
 
     /*

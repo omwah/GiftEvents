@@ -1,0 +1,71 @@
+# The events: section has a sub-section for each configured event.
+#
+# The birthday: and anniversary: events are special in that they are based on
+# dates stored in server. They can disabled by removing or commenting them
+# out in the configuration.
+#
+# Events with dates apply to all players with the proper permissions.
+#
+# Each event has these options:
+# date: Date of the event, ignored for birthday: and anniversary: events
+# belated - Is the gift given after the event has passed, default is false
+# annoucement - An optional message will be made server wide whenever a player 
+# joins matching the event date and if they have not already exhausted their 
+# allotment of messages.
+
+# For each type of event gits can be configured through the gift: section
+# with the following properties:
+# items - Items to be put in player's inventory
+# name - Name to give to items if not specified for item seperately
+# message - Message to give to player when the recieve the gift
+
+# Explanation of items:
+# items: is a list of associative arrays with each associative array having:
+# id - Indicates which item to use. This can be the numerial id of the object
+#    or a string from the Bukkit Material enum
+# enchantments - Optional associative array with id as the key and 
+#    level as the value. The id can either be an integer enchantment id or
+#    a string with a name from the Bukkit Enchantment enum
+# amount - Optional number of the item to give
+# name - Optional name to give to item instead of one specified in gift section
+# damage - Optional damage/durability to assign to the given item
+
+# Announcement and gift messages are formatted with the Java String Formatter
+# and passed player_name, and a Calendar date
+
+events:
+  birthday:
+    belated: True
+    announcement: "Today is %1$s's birthday!"
+    gift:
+      items:
+        - { id: 354, enchantments: {35: 1} } # Cake w/ Fortune I
+      name: "Happy Birthday!"
+      message: "Happy Birthday %1$s, check your inventory for a gift"
+
+  anniversary:
+    belated: True
+    announcement: "Today is %1$s's first play anniversary. Player since %2$tm %2$te,%2$tY"
+    gift:
+      items:
+        - { id: DIAMOND, enchantments: {48: 1}, amount: 5 } #  Diamond w/ Power I
+      name: "Happy Anniversary!"
+      message: "Happy First Play Anniversary %1$s, check your inventory for a gift"
+
+  christmas:
+    date: 12-25
+    belated: False
+    gift:
+      items:
+        - { id: COAL, enchantments: {THORNS: 1} } # Coal w/ Thorns I
+      name: "You've been naughty"
+      message: "Merry Christmas %1$s, check your inventory for a gift"
+
+  new_years:
+    date: 01-01
+    belated: False
+    gift:
+      items:
+        - { id: 401, name: "Blast off!" } # Firework Rocket
+      name: "Happy New Year!"
+      message: "Happy New Year %1$s, check your inventory for a gift"
