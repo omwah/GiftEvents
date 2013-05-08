@@ -1,11 +1,11 @@
 package com.github.omwah.giftevents.command;
 
 import com.github.omwah.giftevents.GiftEventsPlugin;
+import com.github.omwah.omcommands.BasicCommand;
 import com.github.omwah.omcommands.CommandHandler;
-import com.github.omwah.omcommands.PlayerSpecificCommand;
 import org.bukkit.command.CommandSender;
 
-public class EventsReloadCommand extends PlayerSpecificCommand {
+public class EventsReloadCommand extends BasicCommand {
     private final GiftEventsPlugin plugin;
 
     public EventsReloadCommand(GiftEventsPlugin plugin) {

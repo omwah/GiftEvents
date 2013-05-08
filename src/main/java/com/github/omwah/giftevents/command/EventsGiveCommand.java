@@ -4,7 +4,6 @@ import com.github.omwah.giftevents.GiftEventsPlugin;
 import com.github.omwah.giftevents.gevent.GiftEvent;
 import com.github.omwah.omcommands.CommandHandler;
 import com.github.omwah.omcommands.PlayerSpecificCommand;
-import java.text.DateFormat;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 

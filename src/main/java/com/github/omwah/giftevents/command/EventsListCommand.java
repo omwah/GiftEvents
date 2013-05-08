@@ -46,7 +46,6 @@ public class EventsListCommand extends PlayerSpecificCommand {
         
         boolean admin_output = handler.hasAdminPermission(sender) && player_name != null;
                 
-        // Add 4 to width centered due to chat colors
         sender.sendMessage(ChatColor.RED + "---- [ " + ChatColor.WHITE + "Events" + ChatColor.RED + " ] ----");
         
         if(admin_output) {
