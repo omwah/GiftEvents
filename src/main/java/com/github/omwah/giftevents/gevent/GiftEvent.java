@@ -1,5 +1,6 @@
 package com.github.omwah.giftevents.gevent;
 
+import com.github.omwah.giftevents.GiftSet;
 import java.util.Calendar;
 import org.bukkit.entity.Player;
 
@@ -40,5 +41,10 @@ public interface GiftEvent {
      * Returns true if any gifts were given
      */
     public boolean giveGifts(Player player);
+    
+    /*
+     * Get the GiftSet configured for this Event
+     */
+    public GiftSet getGifts();
     
 }

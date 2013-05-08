@@ -10,6 +10,11 @@
   new file. However comments may get lost in the operation.
 * Added /events reload administrative command to reread events from the config
   file.
+* Added /events give adminstrative command to give a player the items for
+  a configured event.
+* Added /events reset admin command to reset the gift status of a player
+* Added /events info command to give more information on an event including
+  what gifts are given.
 
 0.1.3
 -----

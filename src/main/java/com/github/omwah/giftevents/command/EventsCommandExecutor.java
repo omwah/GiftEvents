@@ -31,6 +31,9 @@ public class EventsCommandExecutor extends NestedCommandExecutor {
         ArrayList<PluginCommand> sub_cmd_list = new ArrayList<PluginCommand>();
        
         sub_cmd_list.add(new EventsListCommand(gift_events, gift_events.getOutputDateFormat()));
+        sub_cmd_list.add(new EventsInfoCommand(gift_events, gift_events.getOutputDateFormat()));
+        sub_cmd_list.add(new EventsGiveCommand(gift_events));
+        sub_cmd_list.add(new EventsResetCommand(gift_events));
         sub_cmd_list.add(new EventsReloadCommand(gift_events));
 
         return sub_cmd_list;

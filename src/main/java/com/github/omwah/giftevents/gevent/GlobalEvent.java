@@ -1,5 +1,6 @@
 package com.github.omwah.giftevents.gevent;
 
+import com.github.omwah.giftevents.GiftSet;
 import java.text.SimpleDateFormat;
 import java.text.ParseException;
 import java.util.Calendar;

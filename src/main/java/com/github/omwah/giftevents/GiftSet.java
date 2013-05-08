@@ -23,6 +23,14 @@ public class GiftSet {
     private String message;
     
     /*
+     * Return the list of gift items 
+     */
+    
+    public List<ItemStack> getItems() {
+        return items;
+    }
+    
+    /*
      * Try and parse the item id from the item details map
      */
     private Integer parseItemId(Map<String, ?> itemDetails) {
