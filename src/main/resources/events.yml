@@ -39,7 +39,7 @@ events:
     announcement: "Today is %1$s's birthday!"
     gift:
       items:
-        - { id: 354, enchantments: {35: 1} } # Cake w/ Fortune I
+        - { id: CAKE, enchantments: {LOOT_BONUS_BLOCKS: 1} } # Cake w/ Fortune I
       name: "Happy Birthday!"
       message: "Happy Birthday %1$s, check your inventory for a gift"
 
@@ -48,7 +48,7 @@ events:
     announcement: "Today is %1$s's first play anniversary. Player since %2$tm %2$te,%2$tY"
     gift:
       items:
-        - { id: DIAMOND, enchantments: {48: 1}, amount: 5 } #  Diamond w/ Power I
+        - { id: DIAMOND, enchantments: {ARROW_DAMAGE: 1}, amount: 5 } #  Diamond w/ Power I
       name: "Happy Anniversary!"
       message: "Happy First Play Anniversary %1$s, check your inventory for a gift"
 
@@ -66,6 +66,6 @@ events:
     belated: False
     gift:
       items:
-        - { id: 401, name: "Blast off!" } # Firework Rocket
+        - { id: FIREWORK, name: "Blast off!" } # Firework Rocket
       name: "Happy New Year!"
       message: "Happy New Year %1$s, check your inventory for a gift"
