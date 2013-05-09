@@ -1,5 +1,7 @@
-0.2.0
+2.0
 -----
+* Changed versioning scheme of plugin into something more sensible
+  ie, 0.2.0 -> 2.0
 * Add the possibility of applying damage to items when they are given
 * Turn off awarding of players the anniversary present on their first join.
   Can be re-enabled through a config file option.
@@ -15,6 +17,8 @@
 * Added /events reset admin command to reset the gift status of a player
 * Added /events info command to give more information on an event including
   what gifts are given.
+* Removed usage of PatPeter/SQLibrary due to redistribution restrictions,
+  using JDBC directly now.
 
 0.1.3
 -----

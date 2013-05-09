@@ -45,7 +45,7 @@ events:
 
   anniversary:
     belated: True
-    announcement: "Today is %1$s's first play anniversary. Player since %2$tm %2$te,%2$tY"
+    announcement: "Today is %1$s's first play anniversary. Player since %2$tb %2$te, %2$tY"
     gift:
       items:
         - { id: DIAMOND, enchantments: {ARROW_DAMAGE: 1}, amount: 5 } #  Diamond w/ Power I

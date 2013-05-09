@@ -2,15 +2,16 @@ package com.github.omwah.giftevents;
 
 import com.github.omwah.giftevents.gevent.GiftEvent;
 import java.io.File;
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import lib.PatPeter.SQLibrary.DatabaseException;
-import lib.PatPeter.SQLibrary.SQLite;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -19,26 +20,21 @@ import org.bukkit.plugin.java.JavaPlugin;
  */
 public class EventsInfo {
     private final JavaPlugin plugin;
-    private final SQLite db_conn;
+    private final Connection db_conn;
     private final Logger logger;
     private final boolean first_join_gift;
 
     /*
      * Creates a new instance at the given filename, prefix should be the Plugin's name  
      */
-    public EventsInfo(JavaPlugin plugin, String prefix, File filename, boolean firstJoinGift) {
+    public EventsInfo(JavaPlugin plugin, File filename, boolean firstJoinGift) throws SQLException, ClassNotFoundException {
         this.plugin = plugin;
         this.logger = plugin.getLogger();
         this.first_join_gift = firstJoinGift;
-
-        try {
-            db_conn = new SQLite(logger, prefix, filename.getParent(), filename.getName());
-            db_conn.open();
-        } catch (DatabaseException ex) {
-            logger.log(Level.SEVERE, "Could not create EventsInfo database file: {0}", filename);
-            throw ex;
-        }
-
+        
+        Class.forName("org.sqlite.JDBC");
+        this.db_conn = DriverManager.getConnection("jdbc:sqlite:" + filename.getAbsolutePath());
+            
         initializeTables();
     }
 
@@ -48,13 +44,20 @@ public class EventsInfo {
     private void initializeTables() {
 
         try {
-            if(!db_conn.isTable("past_events")) {
-                db_conn.query("CREATE TABLE past_events (event_name STRING, year INT, player STRING, gift_given INT, announcements_made INT, PRIMARY KEY(event_name, year, player));");
+            Statement stmt = db_conn.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT name FROM sqlite_master WHERE type='table' AND name='past_events';");
+            if(!rs.next()) {
+                stmt.executeUpdate("CREATE TABLE past_events (event_name STRING, year INT, player STRING, gift_given INT, announcements_made INT, PRIMARY KEY(event_name, year, player));");
             }
+            rs.close();
 
-            if(!db_conn.isTable("birthdays")) {
-                db_conn.query("CREATE TABLE birthdays (player STRING PRIMARY KEY, month INT, day INT);");
+            rs = stmt.executeQuery("SELECT name FROM sqlite_master WHERE type='table' AND name='birthdays';");
+            if(!rs.next()) {
+                stmt.executeUpdate("CREATE TABLE birthdays (player STRING PRIMARY KEY, month INT, day INT);");
             }
+            rs.close();
+            
+            stmt.close();
         } catch (SQLException ex) {
             logger.log(Level.SEVERE, "Failed to create all necessary tables.");
             logger.log(Level.SEVERE, ex.toString());
@@ -65,7 +68,11 @@ public class EventsInfo {
      * Close database connection
      */
     public void close() {
-        db_conn.close();
+        try {
+            db_conn.close();
+        } catch (SQLException ex) {
+            logger.log(Level.SEVERE, "Could not close EventsInfo database");
+        }            
     }
 
     /*
@@ -86,11 +93,13 @@ public class EventsInfo {
         
         Calendar now = Calendar.getInstance();
         try {
-            ResultSet rs = db_conn.query("SELECT month, day FROM birthdays WHERE player = \"" + playerName.toLowerCase() + "\";");
+            Statement stmt = db_conn.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT month, day FROM birthdays WHERE player = \"" + playerName.toLowerCase() + "\";");
             if (rs.next()) {
                 return new GregorianCalendar(now.get(Calendar.YEAR), rs.getInt(1), rs.getInt(2));
             }
             rs.close();
+            stmt.close();
         } catch(SQLException ex) {
             logger.log(Level.SEVERE, "Could not retrieve birthday for {0} due to a SQLException:", playerName);
             logger.log(Level.SEVERE, ex.toString());
@@ -105,7 +114,9 @@ public class EventsInfo {
     public boolean setBirthday(Calendar calDate, String playerName) {
         try {
             // Insert new entry
-            db_conn.query("INSERT OR REPLACE INTO birthdays VALUES (\"" + playerName.toLowerCase() + "\", " + calDate.get(Calendar.MONTH) + ", " + calDate.get(Calendar.DAY_OF_MONTH) + ");");
+            Statement stmt = db_conn.createStatement();
+            stmt.executeUpdate("INSERT OR REPLACE INTO birthdays VALUES (\"" + playerName.toLowerCase() + "\", " + calDate.get(Calendar.MONTH) + ", " + calDate.get(Calendar.DAY_OF_MONTH) + ");");
+            stmt.close();
         } catch(SQLException ex) {
             logger.log(Level.SEVERE, "Could not set birthday for {0} due to a SQLException:", playerName);
             logger.log(Level.SEVERE, ex.toString());
@@ -158,13 +169,15 @@ public class EventsInfo {
      */
     private ResultSet getPastEvent(GiftEvent event, String playerName) throws SQLException {
         Calendar now = Calendar.getInstance();
-        
+
+        Statement stmt = db_conn.createStatement();
+
         String count_query = 
                 "SELECT COUNT(*) FROM past_events WHERE " +
                     "event_name = \"" + event.getName().toLowerCase() + "\" AND " +
                     "player = \"" + playerName.toLowerCase() + "\" AND " +
                     "year = " + now.get(Calendar.YEAR) + ";";
-        ResultSet count_res = db_conn.query(count_query);
+        ResultSet count_res = stmt.executeQuery(count_query);
         
         count_res.next();
         if (count_res.getInt(1) == 0) {
@@ -176,15 +189,16 @@ public class EventsInfo {
                     now.get(Calendar.YEAR) + ", " +
                     "\"" + playerName.toLowerCase() + "\", " +
                     "0, 0);";
-            ResultSet insert_res = db_conn.query(insert_query);
+            stmt.executeUpdate(insert_query);
         }
+        count_res.close();
 
         String select_query = 
                 "SELECT * FROM past_events WHERE " +
                     "event_name = \"" + event.getName() + "\" AND " +
                     "player = \"" + playerName.toLowerCase() + "\" AND " +
                     "year = " + now.get(Calendar.YEAR) + ";";
-        ResultSet select_res = db_conn.query(select_query);      
+        ResultSet select_res = stmt.executeQuery(select_query);
         
         return select_res;
     }
@@ -217,7 +231,7 @@ public class EventsInfo {
         Calendar now = Calendar.getInstance();
 
         try {
-            int given_int = given ? 1 : 0;
+            int given_int = given ? 1 : 0;           
             String update_query = 
                     "UPDATE past_events " +
                         "SET gift_given = " + given_int + " " +
@@ -225,7 +239,9 @@ public class EventsInfo {
                         "event_name = \"" + event.getName() + "\" AND " +
                         "player = \"" + playerName.toLowerCase() + "\" AND " +
                         "year = " + now.get(Calendar.YEAR) + ";";
-            ResultSet update_res = db_conn.query(update_query);      
+            Statement stmt = db_conn.createStatement();
+            stmt.executeUpdate(update_query);
+            stmt.close();
             return true;
         } catch(SQLException ex) {
             logger.log(Level.SEVERE, "Could not update gift given for {0} due to a SQLException:", playerName);
@@ -269,7 +285,9 @@ public class EventsInfo {
                         "event_name = \"" + event.getName() + "\" AND " +
                         "player = \"" + playerName.toLowerCase() + "\" AND " +
                         "year = " + now.get(Calendar.YEAR) + ";";
-            ResultSet update_res = db_conn.query(update_query);      
+            Statement stmt = db_conn.createStatement();           
+            stmt.executeUpdate(update_query);
+            stmt.close();
             return true;
         } catch(SQLException ex) {
             logger.log(Level.SEVERE, "Could not set number of announcements made for {0} due to a SQLException:", playerName);

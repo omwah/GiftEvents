@@ -4,7 +4,7 @@
 
   <groupId>com.github.omwah</groupId>
   <artifactId>GiftEvents</artifactId>
-  <version>0.2.1-SNAPSHOT</version>
+  <version>2.0-SNAPSHOT</version>
   <name>GiftEvents</name>
   <description>Rewards players on their birthday, their join anniversary or any other arbitraty day of the year.</description>
 
@@ -40,14 +40,6 @@
       <groupId>com.github.omwah</groupId>
       <artifactId>OmCommands</artifactId>
       <version>0.1.0-SNAPSHOT</version>
-      <type>jar</type>
-      <scope>compile</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>lib.PatPeter</groupId>
-      <artifactId>SQLibrary</artifactId>
-      <version>4.0</version>
       <type>jar</type>
       <scope>compile</scope>
     </dependency>
@@ -123,7 +115,6 @@
               <artifactSet>
                 <includes>
                   <include>com.github.omwah:OmCommands</include>
-                  <include>lib.PatPeter:SQLibrary</include>
                   <include>org.mcstats.bukkit</include>
                 </includes>
               </artifactSet>
@@ -133,10 +124,6 @@
                 <relocation>
                   <pattern>com.github.omwah.omcommands</pattern>
                   <shadedPattern>giftevents.com.github.omwah.omcommands</shadedPattern>
-                </relocation>
-                <relocation>
-                  <pattern>lib.PatPeter.SQLibrary</pattern>
-                  <shadedPattern>giftevents.lib.PatPeter.SQLibrary</shadedPattern>
                 </relocation>
                 <relocation>
                   <pattern>org.mcstats</pattern>

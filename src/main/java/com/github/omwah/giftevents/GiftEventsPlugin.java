@@ -11,6 +11,7 @@ import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
 import java.io.File;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,9 +44,18 @@ public class GiftEventsPlugin extends JavaPlugin {
                
         // Load event information database for keeping track of 
         // birthdays and whether gifts have been handed out
-        File db_file = new File(this.getDataFolder(), "events_info");
+        File db_file = new File(this.getDataFolder(), "events_info.db");
         boolean first_join_gift = this.getConfig().getBoolean("first_join_gift", false);
-        events_info = new EventsInfo(this, this.getName(), db_file, first_join_gift);
+        
+        try {
+            events_info = new EventsInfo(this, db_file, first_join_gift);
+        } catch (SQLException ex) {
+            this.getLogger().log(Level.SEVERE, "Could not create EventsInfo database file: {0}. Plugin can not be intialized!", db_file);
+            return;
+        } catch (ClassNotFoundException ex) {
+            this.getLogger().log(Level.SEVERE, "Could find JDBC class for EventsInfo database. Plugin can not be intialized!");
+            return;            
+        }           
         
         // Load list of events from the config file   
         if (!this.loadEvents()) {
