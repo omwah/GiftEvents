@@ -69,3 +69,11 @@ events:
         - { id: FIREWORK, name: "Blast off!" } # Firework Rocket
       name: "Happy New Year!"
       message: "Happy New Year %1$s, check your inventory for a gift"
+  valentines:
+    date: 02-14
+    belated: False
+    gift:
+      items:
+        - { id: RED_ROSE, enchantments: {ARROW_INFINITE: 1} }
+      name: "I love you!"
+      message: "Happy Valentines Day %1$s, check your inventory for a gift!"
