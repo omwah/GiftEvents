@@ -24,7 +24,7 @@ public class BirthdayGetCommand extends PlayerSpecificCommand {
         setPermission("giftevents.birthday");
     }
 
-    @Override
+
     public boolean execute(CommandHandler handler, CommandSender sender, String label, String identifier, String[] args) {
         String player_name = getDestPlayer(handler, sender, args, 0);
         if (player_name == null) {

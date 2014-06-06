@@ -4,7 +4,6 @@ import com.github.omwah.giftevents.EventsInfo;
 import java.util.Calendar;
 import java.util.logging.Logger;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.entity.Player;
 
 /**
  * An event that is a birthday specific to a player

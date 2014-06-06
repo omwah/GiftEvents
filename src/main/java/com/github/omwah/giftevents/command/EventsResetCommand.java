@@ -4,7 +4,6 @@ import com.github.omwah.giftevents.GiftEventsPlugin;
 import com.github.omwah.giftevents.gevent.GiftEvent;
 import com.github.omwah.omcommands.CommandHandler;
 import com.github.omwah.omcommands.PlayerSpecificCommand;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 
 public class EventsResetCommand extends PlayerSpecificCommand {
@@ -22,7 +21,7 @@ public class EventsResetCommand extends PlayerSpecificCommand {
         setPermission("giftevents.admin");
     }
 
-    @Override
+
     public boolean execute(CommandHandler handler, CommandSender sender, String label, String identifier, String[] args) {
         String player_name = getDestPlayer(handler, sender, args, 0);
         if (player_name == null) {

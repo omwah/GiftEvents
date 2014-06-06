@@ -8,7 +8,6 @@ import com.github.omwah.omcommands.PlayerSpecificCommand;
 import java.text.DateFormat;
 import java.util.Calendar;
 import org.bukkit.ChatColor;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -32,7 +31,7 @@ public class EventsInfoCommand extends PlayerSpecificCommand {
         setPermission("giftevents.events");
     }
 
-    @Override
+
     public boolean execute(CommandHandler handler, CommandSender sender, String label, String identifier, String[] args) {
         // Player name is optional and some events might not need
         // a player name to get their date, such as global events

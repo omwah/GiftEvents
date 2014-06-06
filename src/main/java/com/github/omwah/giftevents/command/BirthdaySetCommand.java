@@ -7,7 +7,6 @@ import java.text.SimpleDateFormat;
 import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.logging.Level;
 import org.bukkit.command.CommandSender;
 
 public class BirthdaySetCommand extends PlayerSpecificCommand {
@@ -27,7 +26,7 @@ public class BirthdaySetCommand extends PlayerSpecificCommand {
         setPermission("giftevents.birthday");
     }
 
-    @Override
+
     public boolean execute(CommandHandler handler, CommandSender sender, String label, String identifier, String[] args)
     {
         String player_name = getDestPlayer(handler, sender, args, 1);

@@ -20,7 +20,7 @@ public class EventsReloadCommand extends BasicCommand {
         setPermission("giftevents.admin");
     }
 
-    @Override
+
     public boolean execute(CommandHandler handler, CommandSender sender, String label, String identifier, String[] args) {
         if(plugin.loadEvents()) {
             sender.sendMessage("Events successfully reloaded");

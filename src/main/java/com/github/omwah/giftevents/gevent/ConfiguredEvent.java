@@ -69,8 +69,7 @@ public abstract class ConfiguredEvent implements GiftEvent {
         }
 
     }
-    
-    @Override
+
     public GiftSet getGifts() {
         return gifts;
     }

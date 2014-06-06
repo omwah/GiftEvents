@@ -3,13 +3,9 @@ package com.github.omwah.giftevents;
 import com.github.omwah.giftevents.gevent.GiftEvent;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
-import java.util.List;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.bukkit.Server;
 import org.bukkit.entity.Player;
 
 /*
