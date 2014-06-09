@@ -1,8 +1,11 @@
-main: com.github.omwah.giftevents.GiftEventsPlugin
 name: ${project.name}
-version: ${project.version}
-author: Omwah
 description: ${project.description}
+version: ${project.version}
+author: [Omwah, Aubli]
+website: http://dev.bukkit.org/bukkit-plugins/giftevents/
+
+main: com.github.omwah.giftevents.GiftEventsPlugin
+
 commands:
   birthday:
     description: Modify or see birthday 
@@ -15,6 +18,7 @@ commands:
   events:
     description: See a list of global gift dates
     usage: /events ?  - For more information
+    
 permissions:
   giftevents.*:
     description: Give access to all GiftEvents commands 
