@@ -33,6 +33,10 @@
 # Announcement and gift messages are formatted with the Java String Formatter
 # and passed player_name, and a Calendar date
 
+# All enchantments provided by craftbukkit can be found here: http://jd.bukkit.org/dev/apidocs/org/bukkit/enchantments/Enchantment.html
+# All materials can be found here: http://jd.bukkit.org/dev/apidocs/org/bukkit/Material.html
+# Entity Ids can be found here: http://minecraft.gamepedia.com/Spawn_Egg#Ability_to_spawn
+
 events:
   birthday:
     belated: True
@@ -74,6 +78,6 @@ events:
     belated: False
     gift:
       items:
-        - { id: RED_ROSE, enchantments: {ARROW_INFINITE: 1} }
+        - { id: RED_ROSE, enchantments: {ARROW_INFINITE: 1} } # A red rose
       name: "I love you!"
       message: "Happy Valentines Day %1$s, check your inventory for a gift!"
