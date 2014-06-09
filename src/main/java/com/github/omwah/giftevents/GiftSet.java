@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
@@ -33,7 +34,8 @@ public class GiftSet {
     /*
      * Try and parse the item id from the item details map
      */
-    private Integer parseItemId(Map<String, ?> itemDetails) {
+    @SuppressWarnings("deprecation")
+	private Integer parseItemId(Map<String, ?> itemDetails) {
         Object id_obj = itemDetails.get("id");
         
         // Try and parse the item id either as an integer or string
@@ -77,7 +79,8 @@ public class GiftSet {
      * Try and parse and enchantment mapping
      */
     
-    private Integer parseEnchantmentId(Object ench_obj) {
+    @SuppressWarnings("deprecation")
+	private Integer parseEnchantmentId(Object ench_obj) {
         Integer ench_id = null;
         if(ench_obj instanceof Integer) {
             ench_id = (Integer) ench_obj;
@@ -107,7 +110,8 @@ public class GiftSet {
      * Creates class from a gift: section of the config.yaml
      */
     
-    public GiftSet(Logger logger, ConfigurationSection config_def) {
+    @SuppressWarnings({ "deprecation", "unchecked" })
+	public GiftSet(Logger logger, ConfigurationSection config_def) {
         String default_name = config_def.getString("name");
         
         this.message = config_def.getString("message");
