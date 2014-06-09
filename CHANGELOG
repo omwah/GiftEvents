@@ -1,3 +1,9 @@
+2.1
+-----
+* Updated all dependencies. (Bukkit from 1.5 to 1.7.9 & MCStats from 6 to 7)
+* Updated Informations. (Added Website, Updated Documentation)
+* Little code improvements.
+
 2.0
 -----
 * Changed versioning scheme of plugin into something more sensible
