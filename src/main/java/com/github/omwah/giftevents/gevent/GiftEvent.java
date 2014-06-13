@@ -1,7 +1,10 @@
 package com.github.omwah.giftevents.gevent;
 
 import com.github.omwah.giftevents.GiftSet;
+
 import java.util.Calendar;
+import java.util.UUID;
+
 import org.bukkit.entity.Player;
 
 /**
@@ -23,7 +26,7 @@ public interface GiftEvent {
     /*
      * The date of the event
      */
-    public Calendar getDate(String playerName);
+    public Calendar getDate(UUID playerUUID);
 
     /*
      * Whether or not the gift can be given after the actual date has passed
@@ -33,7 +36,7 @@ public interface GiftEvent {
     /*
      * Returns an annoucement to be made about the event
      */
-    public String getAnnouncement(String playerName);
+    public String getAnnouncement(UUID playerUUID);
     
     /*
      * Sends gifts to the player and returns a message for the player

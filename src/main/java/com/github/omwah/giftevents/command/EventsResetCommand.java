@@ -1,9 +1,13 @@
 package com.github.omwah.giftevents.command;
 
+import java.util.UUID;
+
 import com.github.omwah.giftevents.GiftEventsPlugin;
 import com.github.omwah.giftevents.gevent.GiftEvent;
 import com.github.omwah.omcommands.CommandHandler;
 import com.github.omwah.omcommands.PlayerSpecificCommand;
+
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 
 public class EventsResetCommand extends PlayerSpecificCommand {
@@ -23,8 +27,8 @@ public class EventsResetCommand extends PlayerSpecificCommand {
 
 
     public boolean execute(CommandHandler handler, CommandSender sender, String label, String identifier, String[] args) {
-        String player_name = getDestPlayer(handler, sender, args, 0);
-        if (player_name == null) {
+        UUID player_uuid = getDestPlayer(handler, sender, args, 0);
+        if (player_uuid == null) {
             // Problem getting player name, reported to user
             return false;
         }
@@ -34,9 +38,9 @@ public class EventsResetCommand extends PlayerSpecificCommand {
         // Look for matching event and award it
         for(GiftEvent gift_event : plugin.getEvents()) {
             if (gift_event.getName().matches(event_name)) {
-                plugin.getEventsInfo().setGiftGiven(gift_event, player_name, false);
-                plugin.getEventsInfo().setNumAnnoucementsMade(gift_event, player_name, 0);
-                sender.sendMessage("Reset gift status of event: " + gift_event.getName() + " for: " + player_name);
+                plugin.getEventsInfo().setGiftGiven(gift_event, player_uuid, false);
+                plugin.getEventsInfo().setNumAnnoucementsMade(gift_event, player_uuid, 0);
+                sender.sendMessage("Reset gift status of event: " + gift_event.getName() + " for: " + Bukkit.getPlayer(player_uuid).getName());
             }
         }
         

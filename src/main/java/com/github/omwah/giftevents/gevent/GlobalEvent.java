@@ -4,8 +4,10 @@ import java.text.SimpleDateFormat;
 import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.bukkit.configuration.ConfigurationSection;
 
 /**
@@ -38,14 +40,14 @@ public class GlobalEvent extends ConfiguredEvent {
         }
     }
 
-    @Override
-    public Calendar getDate(String playerName) {
-        return this.event_calendar;
-    }
+	@Override
+	public String getPermissionPath() {
+		return "giftevents.events";
+	}
 
-    @Override
-    public String getPermissionPath() {
-        return "giftevents.events";
-    }
-    
+	@Override
+	public Calendar getDate(UUID playerUUID) {
+		return this.event_calendar;
+	}
+
 }

@@ -1,8 +1,11 @@
 package com.github.omwah.giftevents.gevent;
 
 import com.github.omwah.giftevents.EventsInfo;
+
 import java.util.Calendar;
+import java.util.UUID;
 import java.util.logging.Logger;
+
 import org.bukkit.configuration.ConfigurationSection;
 
 /**
@@ -15,13 +18,14 @@ public class AnniversaryEvent extends ConfiguredEvent {
         this.events_info = events_info;
     }
     
-    @Override
-    public Calendar getDate(String playerName) {
-        return this.events_info.getFirstPlayedDate(playerName);
+    @Override	
+    public Calendar getDate(UUID playerUUID) {
+        return this.events_info.getFirstPlayedDate(playerUUID);
     }
 
     @Override
     public String getPermissionPath() {
         return "giftevents.anniversary";
     }
+    
 }

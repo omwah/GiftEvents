@@ -1,9 +1,13 @@
 package com.github.omwah.giftevents.gevent;
 
 import com.github.omwah.giftevents.GiftSet;
+
 import java.util.Calendar;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
@@ -33,7 +37,7 @@ public abstract class ConfiguredEvent implements GiftEvent {
 
     public abstract String getPermissionPath();
     
-    public abstract Calendar getDate(String playerName);
+    public abstract Calendar getDate(UUID playerUUID);
 
     public String getName() {
         return this.name;
@@ -43,9 +47,9 @@ public abstract class ConfiguredEvent implements GiftEvent {
         return this.belated;
     }
    
-    public String getAnnouncement(String playerName) {
+    public String getAnnouncement(UUID playerUUID) {
         if (announcement != null) {
-            return String.format(announcement, playerName, this.getDate(playerName));
+            return String.format(announcement, Bukkit.getPlayer(playerUUID).getName(), this.getDate(playerUUID));
         } else {
             return null;
         }
@@ -59,7 +63,7 @@ public abstract class ConfiguredEvent implements GiftEvent {
             // Only send a message to the player if they are online and we actually
             // have a message
             if(player.isOnline() && gifts.getMessageTemplate() != null) {
-                String message = String.format(gifts.getMessageTemplate(), player.getName(), this.getDate(player.getName()));
+                String message = String.format(gifts.getMessageTemplate(), player.getName(), this.getDate(player.getUniqueId()));
                 player.sendMessage(message);
             }
             

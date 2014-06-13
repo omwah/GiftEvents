@@ -1,8 +1,11 @@
 package com.github.omwah.giftevents;
 
 import com.github.omwah.giftevents.gevent.GiftEvent;
+
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.UUID;
+
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -44,30 +47,30 @@ public class GiftEventsListener implements Listener {
      */
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent bukkit_event) {
-        Player player = bukkit_event.getPlayer();
-        String playerName = player.getName();
+        Player player = bukkit_event.getPlayer();       
+        UUID playerUUID = player.getUniqueId();
         
         // For each event check if it applies and give a gift if
         // applicable
         for(GiftEvent gift_event : plugin.getEvents()) {
-            Calendar event_date = gift_event.getDate(playerName);
+            Calendar event_date = gift_event.getDate(playerUUID);
             if(event_date != null && player.hasPermission(gift_event.getPermissionPath())) {
 
                 // Check if we should make an annoucement, don't announce for belated events
                 if (doesDateMatch(event_date, false)) {
-                    int num_annoucements = events_info.getNumAnnoucementsMade(gift_event, playerName);
-                    String annoucement = gift_event.getAnnouncement(player.getName());
+                    int num_annoucements = events_info.getNumAnnoucementsMade(gift_event, playerUUID);
+                    String annoucement = gift_event.getAnnouncement(playerUUID);
                     if(annoucement != null && num_annoucements < max_announcements) {
                         plugin.getServer().broadcastMessage(annoucement);
-                        events_info.setNumAnnoucementsMade(gift_event, playerName, num_annoucements + 1);
+                        events_info.setNumAnnoucementsMade(gift_event, playerUUID, num_annoucements + 1);
                     }
                 }
 
                 // Check if player can recieve a gift, allow belated gifts if configured
                 if(doesDateMatch(event_date, gift_event.canGiveBelated()) &&
-                        !events_info.hasGiftBeenGiven(gift_event, playerName)) {
+                        !events_info.hasGiftBeenGiven(gift_event, playerUUID)) {
                     gift_event.giveGifts(player);
-                    events_info.setGiftGiven(gift_event, playerName, true);
+                    events_info.setGiftGiven(gift_event, playerUUID, true);
                 }
 
             }

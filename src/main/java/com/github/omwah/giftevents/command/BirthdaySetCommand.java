@@ -3,10 +3,14 @@ package com.github.omwah.giftevents.command;
 import com.github.omwah.giftevents.EventsInfo;
 import com.github.omwah.omcommands.CommandHandler;
 import com.github.omwah.omcommands.PlayerSpecificCommand;
+
 import java.text.SimpleDateFormat;
 import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.UUID;
+
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 
 public class BirthdaySetCommand extends PlayerSpecificCommand {
@@ -27,10 +31,9 @@ public class BirthdaySetCommand extends PlayerSpecificCommand {
     }
 
 
-    public boolean execute(CommandHandler handler, CommandSender sender, String label, String identifier, String[] args)
-    {
-        String player_name = getDestPlayer(handler, sender, args, 1);
-        if (player_name == null) {
+    public boolean execute(CommandHandler handler, CommandSender sender, String label, String identifier, String[] args) {
+        UUID player_uuid = getDestPlayer(handler, sender, args, 1);
+        if (player_uuid == null) {
             // Problem getting player name, reported to user
             return false;
         }
@@ -46,11 +49,11 @@ public class BirthdaySetCommand extends PlayerSpecificCommand {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);        
 
-        boolean success = events_info.setBirthday(calendar, player_name);
+        boolean success = events_info.setBirthday(calendar, player_uuid);
         if (success) {
-            sender.sendMessage("Succesfully changed birthday for " + player_name);
+            sender.sendMessage("Succesfully changed birthday for " + Bukkit.getPlayer(player_uuid).getName());
         } else {
-            sender.sendMessage("Failed to change birthday for " + player_name);
+            sender.sendMessage("Failed to change birthday for " + Bukkit.getPlayer(player_uuid).getName());
         }
         return true;
     }

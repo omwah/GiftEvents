@@ -5,8 +5,11 @@ import com.github.omwah.giftevents.EventsInfo;
 import com.github.omwah.giftevents.gevent.GiftEvent;
 import com.github.omwah.omcommands.CommandHandler;
 import com.github.omwah.omcommands.PlayerSpecificCommand;
+
 import java.text.DateFormat;
 import java.util.Calendar;
+import java.util.UUID;
+
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -33,16 +36,16 @@ public class EventsListCommand extends PlayerSpecificCommand {
     public boolean execute(CommandHandler handler, CommandSender sender, String label, String identifier, String[] args) {
         // Player name is optional and some events might not need
         // a player name to get their date, such as global events
-        String player_name = null;
+        UUID player_uuid = null;
         if (args.length > 0 || sender instanceof Player) {
-            player_name = getDestPlayer(handler, sender, args, 0);
-            if (player_name == null) {
+        	player_uuid = getDestPlayer(handler, sender, args, 0);
+            if (player_uuid == null) {
                 // Problem getting player name, reported to user
                 return false;
             }
         }
         
-        boolean admin_output = handler.hasAdminPermission(sender) && player_name != null;
+        boolean admin_output = handler.hasAdminPermission(sender) && player_uuid != null;
                 
         sender.sendMessage(ChatColor.RED + "---- [ " + ChatColor.WHITE + "Events" + ChatColor.RED + " ] ----");
         
@@ -54,13 +57,13 @@ public class EventsListCommand extends PlayerSpecificCommand {
 
         for(GiftEvent gift_event : plugin.getEvents()) {
                        
-            Calendar cal = gift_event.getDate(player_name);
+            Calendar cal = gift_event.getDate(player_uuid);
             if (cal != null) {
                 String event_message = gift_event.getName() + " : " + display_format.format(cal.getTime());
                 
                 if (admin_output) {
-                     event_message += " : " + events_info.hasGiftBeenGiven(gift_event, player_name) + " : " +
-                             events_info.getNumAnnoucementsMade(gift_event, player_name);                
+                     event_message += " : " + events_info.hasGiftBeenGiven(gift_event, player_uuid) + " : " +
+                             events_info.getNumAnnoucementsMade(gift_event, player_uuid);                
                 }
                 
                 sender.sendMessage(event_message);                
