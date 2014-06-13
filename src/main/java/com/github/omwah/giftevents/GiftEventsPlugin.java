@@ -70,12 +70,15 @@ public class GiftEventsPlugin extends JavaPlugin {
         // Load commands for using the plugin
         loadCommands();
 
-        // Try and send metrics to MCStats
-        try {
-            Metrics metrics = new Metrics(this);
-            metrics.start();
-        } catch (IOException e) {
-            getLogger().log(Level.SEVERE, "Could not send data to MCStats!");
+        // Is Metrics enabled?
+        if(this.getConfig().getBoolean("useMetrics")==true) {
+	        // Try and send metrics to MCStats
+	        try {
+	            Metrics metrics = new Metrics(this);
+	            metrics.start();
+	        } catch (IOException e) {
+	            getLogger().log(Level.SEVERE, "Could not send data to MCStats!");
+	        }
         }
     }
     
