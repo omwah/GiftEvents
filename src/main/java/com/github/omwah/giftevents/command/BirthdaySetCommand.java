@@ -8,7 +8,6 @@ import java.text.SimpleDateFormat;
 import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -30,10 +29,10 @@ public class BirthdaySetCommand extends PlayerSpecificCommand {
         setPermission("giftevents.birthday");
     }
 
-
+    @SuppressWarnings("deprecation")
     public boolean execute(CommandHandler handler, CommandSender sender, String label, String identifier, String[] args) {
-        UUID player_uuid = getDestPlayer(handler, sender, args, 1);
-        if (player_uuid == null) {
+        String player_name = getDestPlayer(handler, sender, args, 1);
+        if (player_name == null) {
             // Problem getting player name, reported to user
             return false;
         }
@@ -48,12 +47,12 @@ public class BirthdaySetCommand extends PlayerSpecificCommand {
         }
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);        
-
-        boolean success = events_info.setBirthday(calendar, player_uuid);
+        
+		boolean success = events_info.setBirthday(calendar, Bukkit.getPlayer(player_name).getUniqueId());
         if (success) {
-            sender.sendMessage("Succesfully changed birthday for " + Bukkit.getPlayer(player_uuid).getName());
+            sender.sendMessage("Succesfully changed birthday for " + player_name);
         } else {
-            sender.sendMessage("Failed to change birthday for " + Bukkit.getPlayer(player_uuid).getName());
+            sender.sendMessage("Failed to change birthday for " + player_name);
         }
         return true;
     }

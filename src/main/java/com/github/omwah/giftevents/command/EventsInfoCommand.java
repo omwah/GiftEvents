@@ -8,8 +8,8 @@ import com.github.omwah.omcommands.PlayerSpecificCommand;
 
 import java.text.DateFormat;
 import java.util.Calendar;
-import java.util.UUID;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -35,13 +35,14 @@ public class EventsInfoCommand extends PlayerSpecificCommand {
     }
 
 
-    public boolean execute(CommandHandler handler, CommandSender sender, String label, String identifier, String[] args) {
+    @SuppressWarnings("deprecation")
+	public boolean execute(CommandHandler handler, CommandSender sender, String label, String identifier, String[] args) {
         // Player name is optional and some events might not need
         // a player name to get their date, such as global events
-        UUID player_uuid = null;
+        String player_name = null;
         if (args.length > 1 || sender instanceof Player) {
-        	player_uuid = getDestPlayer(handler, sender, args, 1);
-            if (player_uuid == null) {
+        	player_name = getDestPlayer(handler, sender, args, 1);
+            if (player_name == null) {
                 // Problem getting player name, reported to user
                 return false;
             }
@@ -49,7 +50,7 @@ public class EventsInfoCommand extends PlayerSpecificCommand {
         
         String event_name = args[0];
         
-        boolean admin_output = handler.hasAdminPermission(sender) && player_uuid != null;
+        boolean admin_output = handler.hasAdminPermission(sender) && player_name != null;
 
         // Look for matching event and award it
         for(GiftEvent gift_event : plugin.getEvents()) {
@@ -57,7 +58,7 @@ public class EventsInfoCommand extends PlayerSpecificCommand {
                 sender.sendMessage(ChatColor.RED + "---- [ " + ChatColor.WHITE + gift_event.getName() + " Event" + ChatColor.RED + " ] ----");
                 sender.sendMessage(ChatColor.GRAY + "Name: " + ChatColor.WHITE + gift_event.getName());
                 
-                Calendar cal = gift_event.getDate(player_uuid);
+                Calendar cal = gift_event.getDate(Bukkit.getPlayer(player_name).getUniqueId());
                 if (cal != null) {
                     sender.sendMessage(ChatColor.GRAY + "Date: " + ChatColor.WHITE + display_format.format(cal.getTime()));
                 }
@@ -69,8 +70,8 @@ public class EventsInfoCommand extends PlayerSpecificCommand {
                 }
                 
                 if (admin_output) {
-                    sender.sendMessage(ChatColor.GRAY + "Has Gift Been Given: " + ChatColor.WHITE + events_info.hasGiftBeenGiven(gift_event, player_uuid));
-                    sender.sendMessage(ChatColor.GRAY + "Num Announcements Made: " + ChatColor.WHITE + events_info.getNumAnnoucementsMade(gift_event, player_uuid));                
+                    sender.sendMessage(ChatColor.GRAY + "Has Gift Been Given: " + ChatColor.WHITE + events_info.hasGiftBeenGiven(gift_event, Bukkit.getPlayer(player_name).getUniqueId()));
+                    sender.sendMessage(ChatColor.GRAY + "Num Announcements Made: " + ChatColor.WHITE + events_info.getNumAnnoucementsMade(gift_event, Bukkit.getPlayer(player_name).getUniqueId()));                
                 }
             }
         }

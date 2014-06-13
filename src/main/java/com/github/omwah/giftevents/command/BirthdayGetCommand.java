@@ -6,7 +6,6 @@ import com.github.omwah.omcommands.PlayerSpecificCommand;
 
 import java.text.DateFormat;
 import java.util.Calendar;
-import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -29,18 +28,19 @@ public class BirthdayGetCommand extends PlayerSpecificCommand {
     }
 
 
-    public boolean execute(CommandHandler handler, CommandSender sender, String label, String identifier, String[] args) {
-        UUID player_uuid = getDestPlayer(handler, sender, args, 0);
-        if (player_uuid == null) {
+    @SuppressWarnings("deprecation")
+	public boolean execute(CommandHandler handler, CommandSender sender, String label, String identifier, String[] args) {
+        String player_name = getDestPlayer(handler, sender, args, 0);
+        if (player_name == null) {
             // Problem getting player name, reported to user
             return false;
         }
 
-        Calendar player_birthday = events_info.getBirthday(player_uuid);
+        Calendar player_birthday = events_info.getBirthday(Bukkit.getPlayer(player_name).getUniqueId());
         if (player_birthday != null) {
-            sender.sendMessage(Bukkit.getPlayer(player_uuid).getName() + "'s birthday is: " + display_format.format(player_birthday.getTime()));
+            sender.sendMessage(player_name + "'s birthday is: " + display_format.format(player_birthday.getTime()));
         } else {
-            sender.sendMessage("No birthday found for " + Bukkit.getPlayer(player_uuid).getName()); 
+            sender.sendMessage("No birthday found for " + player_name); 
         }
         return true;
     }
