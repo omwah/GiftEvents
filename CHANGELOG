@@ -1,3 +1,7 @@
+2.2
+-----
+*Changed internal database to UUID's to make sure that GiftEvents suports player name changes.
+
 2.1
 -----
 * Updated all dependencies. (Bukkit from 1.5 to 1.7.9 & MCStats from 6 to 7)
