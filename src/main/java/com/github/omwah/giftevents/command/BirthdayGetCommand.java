@@ -35,8 +35,8 @@ public class BirthdayGetCommand extends PlayerSpecificCommand {
             // Problem getting player name, reported to user
             return false;
         }
-
-        Calendar player_birthday = events_info.getBirthday(Bukkit.getPlayer(player_name).getUniqueId());
+        
+        Calendar player_birthday = events_info.getBirthday(Bukkit.getOfflinePlayer(player_name));
         if (player_birthday != null) {
             sender.sendMessage(player_name + "'s birthday is: " + display_format.format(player_birthday.getTime()));
         } else {

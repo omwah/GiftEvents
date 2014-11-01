@@ -48,12 +48,16 @@ public class BirthdaySetCommand extends PlayerSpecificCommand {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);        
         
-		boolean success = events_info.setBirthday(calendar, Bukkit.getPlayer(player_name).getUniqueId());
-        if (success) {
-            sender.sendMessage("Succesfully changed birthday for " + player_name);
-        } else {
-            sender.sendMessage("Failed to change birthday for " + player_name);
+        if(Bukkit.getPlayer(player_name)!=null) {
+			boolean success = events_info.setBirthday(calendar, Bukkit.getPlayer(player_name).getUniqueId());
+	        if (success) {
+	            sender.sendMessage("Succesfully changed birthday for " + player_name);
+	        } else {
+	            sender.sendMessage("Failed to change birthday for " + player_name);
+	        }
+        }else {
+        	 sender.sendMessage("Failed to change birthday for " + player_name);
         }
-        return true;
+	    return true;
     }
 }

@@ -36,7 +36,7 @@ public class AnniversaryCommand extends PlayerSpecificCommand {
             return false;
         }
 
-        Calendar player_anniversary = events_info.getFirstPlayedDate(Bukkit.getPlayer(player_name).getUniqueId());
+        Calendar player_anniversary = events_info.getFirstPlayedDate(Bukkit.getOfflinePlayer(player_name));
         if (player_anniversary != null) {
             sender.sendMessage(player_name + "'s first play anniversary is: " + display_format.format(player_anniversary.getTime()));
         } else {
