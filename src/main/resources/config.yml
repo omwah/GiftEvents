@@ -4,6 +4,9 @@
 # annoucment_interval minutes previously
 maximum_announcements: 5
 
+# Enable or disable Metrics
+useMetrics: true
+
 date_format:
   # Format used for parsing dates present in config file or from user input
   input: "MM-dd"
