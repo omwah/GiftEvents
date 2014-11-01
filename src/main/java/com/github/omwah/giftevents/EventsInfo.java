@@ -51,12 +51,16 @@ public class EventsInfo {
             ResultSet rs = stmt.executeQuery("SELECT name FROM sqlite_master WHERE type='table' AND name='past_events';");
             if(!rs.next()) {
                 stmt.executeUpdate("CREATE TABLE past_events (event_name STRING, year INT, player STRING, gift_given INT, announcements_made INT, PRIMARY KEY(event_name, year, player));");
+            }else {
+            	convertToUUID("past_events");
             }
             rs.close();
 
             rs = stmt.executeQuery("SELECT name FROM sqlite_master WHERE type='table' AND name='birthdays';");
             if(!rs.next()) {
                 stmt.executeUpdate("CREATE TABLE birthdays (player STRING PRIMARY KEY, month INT, day INT);");
+            }else {
+            	convertToUUID("birthdays");
             }
             rs.close();
             
@@ -66,6 +70,35 @@ public class EventsInfo {
             logger.log(Level.SEVERE, ex.toString());
         }
     }
+    
+    /*
+     * Checks if all player entries are in the uuid format and converts it if necessary
+     */    
+    @SuppressWarnings("deprecation")
+	private void convertToUUID(String table) {
+    	
+    	try {
+	    	Statement st = db_conn.createStatement();
+	    	ResultSet result = st.executeQuery("SELECT * FROM " + table + ";");
+	    	
+	    	while (result.next()) {
+				String playerEntry = result.getString("player");			
+				try {
+					UUID.fromString(playerEntry);
+				}catch(IllegalArgumentException e) {					
+					OfflinePlayer p = plugin.getServer().getOfflinePlayer(playerEntry);
+					logger.log(Level.INFO, "Converting GiftEvent database to UUIDs for Player " + playerEntry);
+				//	System.out.println("Converting " + playerEntry + " to " + p.getUniqueId() + " in table " + table);
+					st.executeUpdate("Update " + table + " SET player=\"" + p.getUniqueId() + "\" WHERE player=\"" + playerEntry + "\";");
+				}	
+			}
+	    	st.close();
+    	}catch (SQLException e) {
+    		 logger.log(Level.SEVERE, "Could not convert UUID's due to a SQLException");
+             logger.log(Level.SEVERE, e.toString());
+    	}
+    }
+    
 
     /*
      * Close database connection
@@ -82,14 +115,14 @@ public class EventsInfo {
      * Gets the birthday for a player, for the current year
      */
     public Calendar getBirthday(OfflinePlayer playerObj) {
-        return getBirthday(playerObj.getUniqueId());
+    	return playerObj!=null ? getBirthday(playerObj.getUniqueId()) : null;
     }
     
     /*
      * Gets the birthday for a player, for the current year
      */
     public Calendar getBirthday(UUID playerUUID) {
-        // Return null if no player name is specified
+        // Return null if no player uuid is specified
         if(playerUUID == null) {
             return null;
         }
@@ -134,27 +167,31 @@ public class EventsInfo {
      * Gets the player first played date
      */
     public Calendar getFirstPlayedDate(OfflinePlayer playerObj) {
-        Calendar fp_cal = Calendar.getInstance();
-        Calendar now = Calendar.getInstance();
-        fp_cal.setTime(new Date(playerObj.getFirstPlayed()));
-        
-        // Don't return date if the player has just joined the server
-        // prevents them from getting gifts when they first join
-        if(!first_join_gift &&
-           now.get(Calendar.MONTH) ==  fp_cal.get(Calendar.MONTH) &&
-           now.get(Calendar.DAY_OF_MONTH) ==  fp_cal.get(Calendar.DAY_OF_MONTH) &&
-           now.get(Calendar.YEAR) == fp_cal.get(Calendar.YEAR)) {
-            return null;
-        } else {
-            return fp_cal;
-        }
+    	if(playerObj!=null) {
+	        Calendar fp_cal = Calendar.getInstance();
+	        Calendar now = Calendar.getInstance();
+	        fp_cal.setTime(new Date(playerObj.getFirstPlayed()));
+	        
+	        // Don't return date if the player has just joined the server
+	        // prevents them from getting gifts when they first join
+	        if(!first_join_gift &&
+	           now.get(Calendar.MONTH) ==  fp_cal.get(Calendar.MONTH) &&
+	           now.get(Calendar.DAY_OF_MONTH) ==  fp_cal.get(Calendar.DAY_OF_MONTH) &&
+	           now.get(Calendar.YEAR) == fp_cal.get(Calendar.YEAR)) {
+	            return null;
+	        } else {
+	            return fp_cal;
+	        }
+    	}else {
+    		return null;
+    	}
     }
 
     /*
      * Get the first played date for a player based on their UUID
      */
     public Calendar getFirstPlayedDate(UUID playerUUID) {
-        // Return null if no player name is specified
+        // Return null if no player uuid is specified
         if(playerUUID == null) {
             return null;
         }
@@ -190,7 +227,7 @@ public class EventsInfo {
                     "VALUES (" +
                     "\"" + event.getName().toLowerCase() + "\", " +
                     now.get(Calendar.YEAR) + ", " +
-                    "\"" + playerUUID + "\", " +
+                    "\"" + playerUUID.toString() + "\", " +
                     "0, 0);";
             stmt.executeUpdate(insert_query);
         }
