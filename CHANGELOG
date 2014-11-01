@@ -7,6 +7,7 @@
 * Updated all dependencies. (Bukkit from 1.5 to 1.7.9 & MCStats from 6 to 7)
 * Updated Informations. (Added Website, Updated Documentation)
 * Little code improvements.
+* Disable/Enable MCStats in Config
 
 2.0
 -----
