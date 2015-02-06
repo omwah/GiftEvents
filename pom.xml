@@ -1,136 +1,135 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
 
-  <groupId>com.github.omwah</groupId>
-  <artifactId>GiftEvents</artifactId>
-  <version>2.2</version>
-  <name>GiftEvents</name>
-  <description>Rewards players on their birthday, their join anniversary or any other arbitraty day of the year.</description>
+	<groupId>com.github.omwah</groupId>
+	<artifactId>GiftEvents</artifactId>
+	<version>2.3</version>
+	<name>GiftEvents</name>
+	<description>Rewards players on their birthday, their join anniversary or any other arbitraty day of the year.</description>
 
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-  </properties>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
 
-  <repositories>
-    <repository>
-      <id>bukkit-repo</id>
-      <url>http://repo.bukkit.org/content/groups/public/</url>
-    </repository>
+	<repositories>
+		<repository>
+			<id>spigot-repo</id>
+			<url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
+		</repository>
 
-     <repository>
-      <id>omwah-repo</id>
-      <url>http://omwah.sdf.org/maven/repo/releases/</url>
-    </repository>
+		<repository>
+			<id>omwah-repo</id>
+			<url>http://omwah.sdf.org/maven/repo/releases/</url>
+		</repository>
 
-    <repository>
-        <id>Plugin Metrics</id>
-        <url>http://repo.mcstats.org/content/repositories/public</url>
-    </repository>   
-  </repositories>
+		<repository>
+			<id>Plugin Metrics</id>
+			<url>http://repo.mcstats.org/content/repositories/public</url>
+		</repository>
+	</repositories>
 
-  <dependencies>
-    <dependency>
-      <groupId>org.bukkit</groupId>
-      <artifactId>bukkit</artifactId>
-      <version>1.7.9-R0.2</version>
-      <type>jar</type>
-      <scope>provided</scope>
-    </dependency>
-    
-    
-    <dependency>
-        <groupId>org.mcstats.bukkit</groupId>
-        <artifactId>metrics</artifactId>
-        <version>R7</version>
-        <scope>compile</scope>
-    </dependency>
-    
-    <dependency>
-      <groupId>com.github.omwah</groupId>
-      <artifactId>OmCommands</artifactId>
-      <version>0.1.0-SNAPSHOT</version>
-    </dependency>
-  </dependencies>
+	<dependencies>
+		<dependency>
+			<groupId>org.bukkit</groupId>
+			<artifactId>bukkit</artifactId>
+			<version>1.8-R0.1-SNAPSHOT</version>
+		</dependency>
 
-  <build>
-    <!-- Filter only plugin.yml -->
-    <resources>
-      <resource>
-        <directory>src/main/resources</directory>
-        <filtering>true</filtering>
-        <includes>
-          <include>plugin.yml</include>
-        </includes>
-      </resource>
-      <resource>
-        <directory>src/main/resources</directory>
-        <filtering>false</filtering>
-        <excludes>
-            <exclude>plugin.yml</exclude>
-        </excludes>
-      </resource>
-    </resources>
-    <plugins>
 
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>2.3.2</version>
-        <configuration>
-          <!-- Minimum Minecraft requirement -->
-          <source>1.5</source>
-          <target>1.5</target>
-        </configuration>
-      </plugin>
+		<dependency>
+			<groupId>org.mcstats.bukkit</groupId>
+			<artifactId>metrics</artifactId>
+			<version>R7</version>
+			<scope>compile</scope>
+		</dependency>
 
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-shade-plugin</artifactId>
-        <version>2.0</version>
-        <executions>
-          <execution>
-            <phase>package</phase>
-            <goals>
-              <goal>shade</goal>
-            </goals>
-            <configuration>
-              <minimizeJar>true</minimizeJar>
-              <artifactSet>
-                <includes>
-                  <include>com.github.omwah:OmCommands</include>
-                  <include>org.mcstats.bukkit</include>
-                </includes>
-              </artifactSet>
-              <filters>
-              </filters>
-              <relocations>
-                <relocation>
-                  <pattern>com.github.omwah.omcommands</pattern>
-                  <shadedPattern>giftevents.com.github.omwah.omcommands</shadedPattern>
-                </relocation>
-                <relocation>
-                  <pattern>org.mcstats</pattern>
-                  <shadedPattern>com.github.omwah.GiftEvents.mcstats</shadedPattern>
-                </relocation>                
-              </relocations>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-   
-    </plugins>
-  </build>
+		<dependency>
+			<groupId>com.github.omwah</groupId>
+			<artifactId>OmCommands</artifactId>
+			<version>0.1.0-SNAPSHOT</version>
+		</dependency>
+	</dependencies>
 
-  <distributionManagement>
-    <repository>
-      <id>stage-repo</id>
-      <url>file://${basedir}/../repo/releases</url>
-    </repository>
-    <snapshotRepository>
-      <id>stage-repo-stapshots</id>
-      <url>file://${basedir}/../repo/snapshots</url>
-    </snapshotRepository>
-  </distributionManagement>
+	<build>
+		<!-- Filter only plugin.yml -->
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+				<includes>
+					<include>plugin.yml</include>
+				</includes>
+			</resource>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>false</filtering>
+				<excludes>
+					<exclude>plugin.yml</exclude>
+				</excludes>
+			</resource>
+		</resources>
+		<plugins>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.3.2</version>
+				<configuration>
+					<!-- Minimum Minecraft requirement -->
+					<source>1.5</source>
+					<target>1.5</target>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-shade-plugin</artifactId>
+				<version>2.0</version>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>shade</goal>
+						</goals>
+						<configuration>
+							<minimizeJar>true</minimizeJar>
+							<artifactSet>
+								<includes>
+									<include>com.github.omwah:OmCommands</include>
+									<include>org.mcstats.bukkit</include>
+								</includes>
+							</artifactSet>
+							<filters>
+							</filters>
+							<relocations>
+								<relocation>
+									<pattern>com.github.omwah.omcommands</pattern>
+									<shadedPattern>giftevents.com.github.omwah.omcommands</shadedPattern>
+								</relocation>
+								<relocation>
+									<pattern>org.mcstats</pattern>
+									<shadedPattern>com.github.omwah.GiftEvents.mcstats</shadedPattern>
+								</relocation>
+							</relocations>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+		</plugins>
+	</build>
+
+	<distributionManagement>
+		<repository>
+			<id>stage-repo</id>
+			<url>file://${basedir}/../repo/releases</url>
+		</repository>
+		<snapshotRepository>
+			<id>stage-repo-stapshots</id>
+			<url>file://${basedir}/../repo/snapshots</url>
+		</snapshotRepository>
+	</distributionManagement>
 
 </project>
