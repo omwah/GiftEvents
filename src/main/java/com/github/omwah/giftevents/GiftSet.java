@@ -207,7 +207,7 @@ public class GiftSet {
                 World player_world = player.getLocation().getWorld();
                 // Drop items next to player if they dont fit
                 for(ItemStack drop_item : dropped_items.values()) {
-                    player_world.dropItemNaturally(player.getLocation(), item);
+                    player_world.dropItemNaturally(player.getLocation(), drop_item);
                 }
             }
         }
