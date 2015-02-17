@@ -179,7 +179,7 @@ public class GiftEventsPlugin extends JavaPlugin {
             
             for(String event_name : advanced_section.getKeys(false)) {
                 ConfigurationSection event_config = advanced_section.getConfigurationSection(event_name);
-                events.add(new IncrementalEvent(this.getLogger(), event_config));
+                events.add(new IncrementalEvent(this.getLogger(), event_config, events_info));
             }
         }
         
