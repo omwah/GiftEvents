@@ -8,9 +8,11 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -341,8 +343,11 @@ public class EventsInfo {
         
         return false;       
     }
-    
-    public boolean logedInOn(UUID playerUUID, Calendar date) {
+   
+    /*
+     * Checks if a specific player was online on a specific date
+     */
+    private boolean logedInOn(UUID playerUUID, Calendar date) {
 	
 	try {
 	    Statement stmt = db_conn.createStatement();
@@ -356,12 +361,15 @@ public class EventsInfo {
 	    ResultSet rs = stmt.executeQuery(select_query);
 	    return rs.next();	    
 	} catch (SQLException ex) {
-            logger.log(Level.SEVERE, "Failed to get last login date!");
+            logger.log(Level.SEVERE, "Failed to get last login date for player " + playerUUID.toString() + "!");
             logger.log(Level.SEVERE, ex.toString());
         }	
 	return false;
     }
     
+    /*
+     * Adds the current date to the database
+     */
     public boolean addLoginDate(UUID playerUUID) {
 	Calendar now = Calendar.getInstance();
 	
@@ -381,9 +389,59 @@ public class EventsInfo {
 	    stmt.executeUpdate(insert_query);	    
 	    return true;
 	} catch (SQLException ex) {
-            logger.log(Level.SEVERE, "Failed to insert last login date.");
+            logger.log(Level.SEVERE, "Failed to insert last login date for player " + playerUUID.toString() + "!");
             logger.log(Level.SEVERE, ex.toString());
         }
 	return false;
+    }
+    
+    public List<Calendar> getLoginDates(UUID playerUUID) {
+	
+	List<Calendar> loginDates = new ArrayList<Calendar>(); 
+	
+	try {
+	    Statement stmt = db_conn.createStatement();
+	    
+	    String select_query = "SELECT * FROM logins WHERE player=\"" + playerUUID.toString() + "\";";
+	    ResultSet rs = stmt.executeQuery(select_query);
+	    
+	    if(rs!=null) {
+		while(rs.next()) {
+		    Calendar cal = new GregorianCalendar(rs.getInt("year"), rs.getInt("month"), rs.getInt("day"));
+		    loginDates.add(cal);
+		}
+	    }
+	    
+	}catch(SQLException ex) {
+	    logger.log(Level.SEVERE, "Failed to get login dates for player " + playerUUID.toString() + "!");
+            logger.log(Level.SEVERE, ex.toString());
+            return null;
+	}	
+	
+	return loginDates;	
+    }
+    
+    public List<UUID> getAllPlayers() {
+	List<UUID> playerList = new ArrayList<UUID>();
+	
+	try {
+	    Statement stmt = db_conn.createStatement();
+	    
+	    String select_query = "SELECT * FROM logins;";
+	    ResultSet rs = stmt.executeQuery(select_query);
+	    
+	    if(rs!=null) {
+		while(rs.next()) {
+		    playerList.add(UUID.fromString(rs.getString("player")));
+		}
+	    }
+	    
+	}catch(SQLException ex) {
+	    logger.log(Level.SEVERE, "Failed to get login dates from table!");
+            logger.log(Level.SEVERE, ex.toString());
+            return null;
+	}
+	
+	return playerList;
     }
 }
