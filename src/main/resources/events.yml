@@ -17,7 +17,7 @@
 # with the following properties:
 # items - Items to be put in player's inventory
 # name - Name to give to items if not specified for item seperately
-# message - Message to give to player when the recieve the gift
+# message - Message to give to player when they recieve the gift
 
 # Explanation of items:
 # items: is a list of associative arrays with each associative array having:
@@ -33,8 +33,8 @@
 # Announcement and gift messages are formatted with the Java String Formatter
 # and passed player_name, and a Calendar date
 
-# All enchantments provided by craftbukkit can be found here: http://jd.bukkit.org/dev/apidocs/org/bukkit/enchantments/Enchantment.html
-# All materials can be found here: http://jd.bukkit.org/dev/apidocs/org/bukkit/Material.html
+# All enchantments provided by craftbukkit can be found here: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/enchantments/Enchantment.html
+# All materials can be found here: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html
 # Entity Ids can be found here: http://minecraft.gamepedia.com/Spawn_Egg#Ability_to_spawn
 
 events:
