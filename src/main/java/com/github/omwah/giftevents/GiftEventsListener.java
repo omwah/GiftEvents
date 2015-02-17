@@ -50,6 +50,11 @@ public class GiftEventsListener implements Listener {
         Player player = bukkit_event.getPlayer();       
         UUID playerUUID = player.getUniqueId();
         
+        // Check if incremental events are enabled and if so save the login date
+        if(plugin.getIncrementalEnabled()) {
+            events_info.addLoginDate(playerUUID);
+        }
+        
         // For each event check if it applies and give a gift if
         // applicable
         for(GiftEvent gift_event : plugin.getEvents()) {
@@ -74,11 +79,6 @@ public class GiftEventsListener implements Listener {
                 }
 
             }
-        }
-        
-        // Check if incremental events are enabled and if so save the login date
-        if(plugin.getIncrementalEnabled()) {
-            events_info.addLoginDate(playerUUID);
         }
     }
     
