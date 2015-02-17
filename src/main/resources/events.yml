@@ -1,19 +1,19 @@
-# The events: section has a sub-section for each configured event.
+# The 'events:' section has a sub-section for each configured event.
 #
-# The birthday: and anniversary: events are special in that they are based on
-# dates stored in server. They can disabled by removing or commenting them
+# The 'birthday:' and 'anniversary:' events are special in that they are based on
+# dates stored in the server. They can disabled by removing or commenting them
 # out in the configuration.
 #
 # Events with dates apply to all players with the proper permissions.
 #
 # Each event has these options:
-# date: Date of the event, ignored for birthday: and anniversary: events
-# belated - Is the gift given after the event has passed, default is false
+# date - Date of the event, ignored for 'birthday:' and 'anniversary:' events
+# belated - Should the gift be given after the event has passed, default is false
 # annoucement - An optional message will be made server wide whenever a player 
 # joins matching the event date and if they have not already exhausted their 
 # allotment of messages.
 
-# For each type of event gits can be configured through the gift: section
+# For each type of event gifts can be configured through the 'gift:' section
 # with the following properties:
 # items - Items to be put in player's inventory
 # name - Name to give to items if not specified for item seperately
@@ -33,7 +33,7 @@
 # Announcement and gift messages are formatted with the Java String Formatter
 # and passed player_name, and a Calendar date
 
-# All enchantments provided by craftbukkit can be found here: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/enchantments/Enchantment.html
+# All enchantments provided by CraftBukkit/Spigot can be found here: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/enchantments/Enchantment.html
 # All materials can be found here: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html
 # Entity Ids can be found here: http://minecraft.gamepedia.com/Spawn_Egg#Ability_to_spawn
 
@@ -73,6 +73,7 @@ events:
         - { id: FIREWORK, name: "Blast off!" } # Firework Rocket
       name: "Happy New Year!"
       message: "Happy New Year %1$s, check your inventory for a gift"
+
   valentines:
     date: 02-14
     belated: False
@@ -81,3 +82,36 @@ events:
         - { id: RED_ROSE, enchantments: {ARROW_INFINITE: 1} } # A red rose
       name: "I love you!"
       message: "Happy Valentines Day %1$s, check your inventory for a gift!"
+      
+advanced-events:
+  test:
+    1:
+      gift:
+        items:
+          - { id: STONE, enchantments: {ARROW_INFINITE: 1} } # A red rose
+        name: "Day one!"
+        message: "Happy STONE Day %1$s!"
+    2:
+      gift:
+        items:
+          - { id: DIRT, enchantments: {ARROW_INFINITE: 1} } # A red rose
+        name: "Day two!"
+        message: "Happy DIRT Day %1$s!"
+    4:
+      gift:
+        items:
+          - { id: GRASS, enchantments: {ARROW_INFINITE: 1} } # A red rose
+        name: "Day four!"
+        message: "Happy GRASS Day %1$s!"
+    6:
+      gift:
+        items:
+          - { id: GLASS, enchantments: {ARROW_INFINITE: 1} } # A red rose
+        name: "Day six!"
+        message: "Happy GLASS Day %1$s!"
+    879:
+      gift:
+        items:
+          - { id: GOLD_BLOCK, enchantments: {DURABILITY: 5} }
+        name: "Day 879!"
+        message: "You sure are a great user %1$s!"
