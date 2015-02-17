@@ -4,11 +4,14 @@ import com.github.omwah.giftevents.gevent.BirthdayEvent;
 import com.github.omwah.giftevents.gevent.AnniversaryEvent;
 import com.github.omwah.giftevents.gevent.GiftEvent;
 import com.github.omwah.giftevents.gevent.GlobalEvent;
+import com.github.omwah.giftevents.gevent.IncrementalEvent;
 import com.github.omwah.giftevents.command.BirthdayCommandExecutor;
 import com.github.omwah.giftevents.command.EventsCommandExecutor;
 import com.github.omwah.giftevents.command.AnniversaryCommandExecutor;
+
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
+
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -16,6 +19,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
+
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.Listener;
@@ -28,7 +32,8 @@ public class GiftEventsPlugin extends JavaPlugin {
     private EventsInfo events_info;
     private List<GiftEvent> events;
     private File events_config_file;
-
+    private boolean enableIncrementalEvents;
+    
     /*
      * Enable plugin, set up commands and configuration
      */
@@ -45,6 +50,7 @@ public class GiftEventsPlugin extends JavaPlugin {
         // birthdays and whether gifts have been handed out
         File db_file = new File(this.getDataFolder(), "events_info.db");
         boolean first_join_gift = this.getConfig().getBoolean("first_join_gift", false);
+        this.enableIncrementalEvents = this.getConfig().getBoolean("incrementalEvents");
         
         try {
             events_info = new EventsInfo(this, db_file, first_join_gift);
@@ -162,6 +168,19 @@ public class GiftEventsPlugin extends JavaPlugin {
                 events.add(new AnniversaryEvent(this.getLogger(), event_config, events_info));
             } else {
                 events.add(new GlobalEvent(this.getLogger(), event_config, this.getInputDateFormat()));
+            }
+        }
+        
+        if(this.enableIncrementalEvents) {
+            // Create incremental events from advanced-events config section
+            ConfigurationSection advanced_section = events_config.getConfigurationSection("advanced-events");
+            if(advanced_section == null) {
+                return false;
+            }
+            
+            for(String event_name : advanced_section.getKeys(false)) {
+                ConfigurationSection event_config = advanced_section.getConfigurationSection(event_name);
+                events.add(new IncrementalEvent(this.getLogger(), event_config));
             }
         }
         
