@@ -142,7 +142,6 @@ public class GiftEventsPlugin extends JavaPlugin {
     /*
      * Loads the events list from the config file
      */
-    
     public boolean loadEvents() {
         // Reload the configuration in case this is being called to reload the events
         YamlConfiguration events_config;
@@ -212,7 +211,6 @@ public class GiftEventsPlugin extends JavaPlugin {
     /*
      * Returns the EventsInfo databvase  
      */
-
     public EventsInfo getEventsInfo() {
         return events_info;
     }
@@ -220,7 +218,6 @@ public class GiftEventsPlugin extends JavaPlugin {
     /*
      * Get list of configured events
      */
-    
     public List<GiftEvent> getEvents() {
         return events;
     }
@@ -228,7 +225,6 @@ public class GiftEventsPlugin extends JavaPlugin {
     /*
      * Return the date format specified in the configuration file for inputting values
      */
-
     public SimpleDateFormat getInputDateFormat() {
         return new SimpleDateFormat(getConfig().getString("date_format.input", "MM-dd"));
     }
@@ -236,8 +232,11 @@ public class GiftEventsPlugin extends JavaPlugin {
     /*
      * Return the date format specified in the configuration file for outputting dates
      */
-
     public SimpleDateFormat getOutputDateFormat() {
         return new SimpleDateFormat(getConfig().getString("date_format.output", "MM-dd"));
+    }
+    
+    public boolean getIncrementalEnabled() {
+	return enableIncrementalEvents;
     }
 }

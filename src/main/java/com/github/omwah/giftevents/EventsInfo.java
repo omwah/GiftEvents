@@ -64,6 +64,12 @@ public class EventsInfo {
             }
             rs.close();
             
+            rs = stmt.executeQuery("SELECT name FROM sqlite_master WHERE type='table' AND name='logins';");
+            if(!rs.next()) {
+                stmt.executeUpdate("CREATE TABLE logins (player STRING, month INT, day INT, year INT);");
+            }
+            rs.close();
+            
             stmt.close();
         } catch (SQLException ex) {
             logger.log(Level.SEVERE, "Failed to create all necessary tables.");
@@ -75,30 +81,29 @@ public class EventsInfo {
      * Checks if all player entries are in the uuid format and converts it if necessary
      */    
     @SuppressWarnings("deprecation")
-	private void convertToUUID(String table) {
-    	
-    	try {
-	    	Statement st = db_conn.createStatement();
-	    	ResultSet result = st.executeQuery("SELECT * FROM " + table + ";");
+    private void convertToUUID(String table) {
+	
+	try {
+	    Statement st = db_conn.createStatement();
+	    ResultSet result = st.executeQuery("SELECT * FROM " + table + ";");
 	    	
-	    	while (result.next()) {
-				String playerEntry = result.getString("player");			
-				try {
-					UUID.fromString(playerEntry);
-				}catch(IllegalArgumentException e) {					
-					OfflinePlayer p = plugin.getServer().getOfflinePlayer(playerEntry);
-					logger.log(Level.INFO, "Converting GiftEvent database to UUIDs for Player " + playerEntry);
-				//	System.out.println("Converting " + playerEntry + " to " + p.getUniqueId() + " in table " + table);
-					st.executeUpdate("Update " + table + " SET player=\"" + p.getUniqueId() + "\" WHERE player=\"" + playerEntry + "\";");
-				}	
-			}
-	    	st.close();
-    	}catch (SQLException e) {
-    		 logger.log(Level.SEVERE, "Could not convert UUID's due to a SQLException");
-             logger.log(Level.SEVERE, e.toString());
-    	}
+	    while (result.next()) {
+		String playerEntry = result.getString("player");			
+		try {
+		    UUID.fromString(playerEntry);
+		}catch(IllegalArgumentException e) {					
+		    OfflinePlayer p = plugin.getServer().getOfflinePlayer(playerEntry);
+		    logger.log(Level.INFO, "Converting GiftEvent database to UUIDs for Player " + playerEntry);
+		    //	System.out.println("Converting " + playerEntry + " to " + p.getUniqueId() + " in table " + table);
+		    st.executeUpdate("Update " + table + " SET player=\"" + p.getUniqueId() + "\" WHERE player=\"" + playerEntry + "\";");
+		}
+	    }
+	    st.close();
+	}catch (SQLException e) {
+	    logger.log(Level.SEVERE, "Could not convert UUID's due to a SQLException");
+	    logger.log(Level.SEVERE, e.toString());
+	}
     }
-    
 
     /*
      * Close database connection
@@ -335,5 +340,50 @@ public class EventsInfo {
         }
         
         return false;       
+    }
+    
+    public boolean logedInOn(UUID playerUUID, Calendar date) {
+	
+	try {
+	    Statement stmt = db_conn.createStatement();
+	    
+	    String select_query =
+		    "SELECT * FROM logins WHERE " +
+			    "player = \"" + playerUUID.toString() + "\" AND " +
+			    "month = \"" + (date.get(Calendar.MONTH)+1) + "\" AND " + 
+			    "day = \"" + date.get(Calendar.DAY_OF_MONTH) + "\" AND " +
+			    "year = \"" + date.get(Calendar.YEAR) + "\";";
+	    ResultSet rs = stmt.executeQuery(select_query);
+	    return rs.next();	    
+	} catch (SQLException ex) {
+            logger.log(Level.SEVERE, "Failed to get last login date!");
+            logger.log(Level.SEVERE, ex.toString());
+        }	
+	return false;
+    }
+    
+    public boolean addLoginDate(UUID playerUUID) {
+	Calendar now = Calendar.getInstance();
+	
+	if(logedInOn(playerUUID, now)) {
+	    return false;
+	}
+	//INSERT INTO past_events (event_name, year, player, gift_given, announcements_made) VALUES("event.getName()", "now.get(Calendar.YEAR)", "playerUUID", 0, 0);
+	//(player STRING PRIMARY KEY, month INT, day INT, year INT)
+	try {
+	    Statement stmt = db_conn.createStatement();
+	    
+	    String insert_query = 
+		    "INSERT INTO logins (player, month, day, year) VALUES(" +
+		    "\"" + playerUUID.toString() + "\", " + (now.get(Calendar.MONTH)+1) + ", " + 
+		    now.get(Calendar.DAY_OF_MONTH) + ", " + now.get(Calendar.YEAR) + ");";	    
+	    
+	    stmt.executeUpdate(insert_query);	    
+	    return true;
+	} catch (SQLException ex) {
+            logger.log(Level.SEVERE, "Failed to insert last login date.");
+            logger.log(Level.SEVERE, ex.toString());
+        }
+	return false;
     }
 }

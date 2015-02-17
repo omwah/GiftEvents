@@ -75,6 +75,11 @@ public class GiftEventsListener implements Listener {
 
             }
         }
+        
+        // Check if incremental events are enabled and if so save the login date
+        if(plugin.getIncrementalEnabled()) {
+            events_info.addLoginDate(playerUUID);
+        }
     }
     
 }
