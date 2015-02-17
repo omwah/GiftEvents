@@ -8,6 +8,7 @@ import com.github.omwah.omcommands.PlayerSpecificCommand;
 
 import java.text.DateFormat;
 import java.util.Calendar;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -57,14 +58,15 @@ public class EventsListCommand extends PlayerSpecificCommand {
         }
 
         for(GiftEvent gift_event : plugin.getEvents()) {
-                       
-            Calendar cal = gift_event.getDate(Bukkit.getPlayer(player_name).getUniqueId());
+            UUID playerUUID = Bukkit.getPlayer(player_name)!=null?Bukkit.getPlayer(player_name).getUniqueId():Bukkit.getOfflinePlayer(player_name).getUniqueId();
+            
+            Calendar cal = gift_event.getDate(playerUUID);
             if (cal != null) {
                 String event_message = gift_event.getName() + " : " + display_format.format(cal.getTime());
                 
                 if (admin_output) {
-                     event_message += " : " + events_info.hasGiftBeenGiven(gift_event, Bukkit.getPlayer(player_name).getUniqueId()) + " : " +
-                             events_info.getNumAnnoucementsMade(gift_event, Bukkit.getPlayer(player_name).getUniqueId());                
+                     event_message += " : " + events_info.hasGiftBeenGiven(gift_event, playerUUID) + " : " +
+                             events_info.getNumAnnoucementsMade(gift_event, playerUUID);                
                 }
                 
                 sender.sendMessage(event_message);                

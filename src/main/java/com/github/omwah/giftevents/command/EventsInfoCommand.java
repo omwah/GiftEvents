@@ -8,6 +8,7 @@ import com.github.omwah.omcommands.PlayerSpecificCommand;
 
 import java.text.DateFormat;
 import java.util.Calendar;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -36,7 +37,7 @@ public class EventsInfoCommand extends PlayerSpecificCommand {
 
 
     @SuppressWarnings("deprecation")
-	public boolean execute(CommandHandler handler, CommandSender sender, String label, String identifier, String[] args) {
+    public boolean execute(CommandHandler handler, CommandSender sender, String label, String identifier, String[] args) {
         // Player name is optional and some events might not need
         // a player name to get their date, such as global events
         String player_name = null;
@@ -58,7 +59,9 @@ public class EventsInfoCommand extends PlayerSpecificCommand {
                 sender.sendMessage(ChatColor.RED + "---- [ " + ChatColor.WHITE + gift_event.getName() + " Event" + ChatColor.RED + " ] ----");
                 sender.sendMessage(ChatColor.GRAY + "Name: " + ChatColor.WHITE + gift_event.getName());
                 
-                Calendar cal = gift_event.getDate(Bukkit.getPlayer(player_name).getUniqueId());
+                UUID playerUUID = Bukkit.getPlayer(player_name)!=null?Bukkit.getPlayer(player_name).getUniqueId():Bukkit.getOfflinePlayer(player_name).getUniqueId();
+                
+                Calendar cal = gift_event.getDate(playerUUID);
                 if (cal != null) {
                     sender.sendMessage(ChatColor.GRAY + "Date: " + ChatColor.WHITE + display_format.format(cal.getTime()));
                 }
@@ -70,8 +73,8 @@ public class EventsInfoCommand extends PlayerSpecificCommand {
                 }
                 
                 if (admin_output) {
-                    sender.sendMessage(ChatColor.GRAY + "Has Gift Been Given: " + ChatColor.WHITE + events_info.hasGiftBeenGiven(gift_event, Bukkit.getPlayer(player_name).getUniqueId()));
-                    sender.sendMessage(ChatColor.GRAY + "Num Announcements Made: " + ChatColor.WHITE + events_info.getNumAnnoucementsMade(gift_event, Bukkit.getPlayer(player_name).getUniqueId()));                
+                    sender.sendMessage(ChatColor.GRAY + "Has Gift Been Given: " + ChatColor.WHITE + events_info.hasGiftBeenGiven(gift_event, playerUUID));
+                    sender.sendMessage(ChatColor.GRAY + "Num Announcements Made: " + ChatColor.WHITE + events_info.getNumAnnoucementsMade(gift_event, playerUUID));                
                 }
             }
         }
