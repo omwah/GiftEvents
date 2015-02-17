@@ -7,6 +7,9 @@ maximum_announcements: 5
 # Enable or disable Metrics
 useMetrics: true
 
+# Enable incremental events
+incrementalEvents: true
+
 date_format:
   # Format used for parsing dates present in config file or from user input
   input: "MM-dd"
