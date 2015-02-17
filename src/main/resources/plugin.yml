@@ -26,6 +26,7 @@ permissions:
       giftevents.birthday: true
       giftevents.anniversary: true
       giftevents.events: true
+      giftevents.incremental: true
       giftevents.admin: true
   giftevents.birthday:
     description: Allow access to birthday commands and functionality
@@ -35,6 +36,9 @@ permissions:
     default: true
   giftevents.events:
     description: Allow access to events commands and functionality
+    default: true
+  giftevents.incremental:
+    description: Allow access to incremental commands and functionality
     default: true
   giftevents.admin:
     description: Allow access to administration commands
