@@ -1,7 +1,7 @@
 # The 'events:' section has a sub-section for each configured event.
 #
 # The 'birthday:' and 'anniversary:' events are special in that they are based on
-# dates stored in the server. They can disabled by removing or commenting them
+# dates stored in the server. They can be disabled by removing or commenting them
 # out in the configuration.
 #
 # Events with dates apply to all players with the proper permissions.
@@ -13,11 +13,20 @@
 # joins matching the event date and if they have not already exhausted their 
 # allotment of messages.
 
+
+# Explanation of advanced events:
+# Advanced events can be used to give players a gift for every day they join.
+# The numbers of days are not limited and can be over 365(a year) too.
+# Advanced events do not support announcements, specific dates or the belated option!
+# An Example can be found at the end of the file.
+
+
 # For each type of event gifts can be configured through the 'gift:' section
 # with the following properties:
 # items - Items to be put in player's inventory
 # name - Name to give to items if not specified for item seperately
 # message - Message to give to player when they recieve the gift
+
 
 # Explanation of items:
 # items: is a list of associative arrays with each associative array having:
@@ -84,34 +93,34 @@ events:
       message: "Happy Valentines Day %1$s, check your inventory for a gift!"
       
 advanced-events:
-  test:
+  Example:
     1:
       gift:
         items:
-          - { id: STONE, enchantments: {ARROW_INFINITE: 1} } # A red rose
+          - { id: STONE, enchantments: {ARROW_INFINITE: 1} } # stone on the first day
         name: "Day one!"
         message: "Happy STONE Day %1$s!"
     2:
       gift:
         items:
-          - { id: DIRT, enchantments: {ARROW_INFINITE: 1} } # A red rose
+          - { id: DIRT, enchantments: {ARROW_INFINITE: 1} } # dirt on the second day
         name: "Day two!"
         message: "Happy DIRT Day %1$s!"
     4:
       gift:
         items:
-          - { id: GRASS, enchantments: {ARROW_INFINITE: 1} } # A red rose
+          - { id: GRASS, enchantments: {ARROW_INFINITE: 1} } # grass on the fourth day
         name: "Day four!"
         message: "Happy GRASS Day %1$s!"
     6:
       gift:
         items:
-          - { id: GLASS, enchantments: {ARROW_INFINITE: 1} } # A red rose
+          - { id: GLASS, enchantments: {ARROW_INFINITE: 1} } # glass on the sixth day
         name: "Day six!"
         message: "Happy GLASS Day %1$s!"
     879:
       gift:
         items:
-          - { id: GOLD_BLOCK, enchantments: {DURABILITY: 5} }
+          - { id: GOLD_BLOCK, enchantments: {DURABILITY: 1} } # gold block on the 879th day
         name: "Day 879!"
-        message: "You sure are a great user %1$s!"
+        message: "You sure are a great user, %1$s!"
