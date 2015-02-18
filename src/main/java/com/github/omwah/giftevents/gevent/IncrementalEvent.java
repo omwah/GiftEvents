@@ -52,6 +52,11 @@ public class IncrementalEvent implements GiftEvent {
 	return "giftevents.incremental";
     }
     
+    public String getDateName(UUID playerUUID) {
+	Calendar cal = getDate(playerUUID);
+	return getName() + "-" + cal.get(Calendar.DAY_OF_MONTH) + ":" + (cal.get(Calendar.MONTH)+1) + ":" + cal.get(Calendar.YEAR);
+    }
+    
     public String getName() {
    	return this.name;
     }
@@ -66,7 +71,7 @@ public class IncrementalEvent implements GiftEvent {
 
 	List<Calendar> loginDates = events_info.getLoginDates(playerUUID);
 	
-	if(gifts.get(loginDates.size())!=null && !events_info.hasGiftBeenGiven(this, playerUUID)) {
+	if(gifts.get(loginDates.size())!=null) {
 	    return date;
 	}else if(gifts.lastKey() < loginDates.size()) {	   
 	    return null;
@@ -128,8 +133,8 @@ public class IncrementalEvent implements GiftEvent {
 	return false;
     }
 
-    public GiftSet getGifts() {
-	// TODO Auto-generated method stub
+    // Can not return a specific gift
+    public GiftSet getGifts() {	
 	return null;
     }
     
