@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import com.github.omwah.giftevents.GiftEventsPlugin;
 import com.github.omwah.giftevents.gevent.GiftEvent;
+import com.github.omwah.giftevents.gevent.IncrementalEvent;
 import com.github.omwah.omcommands.CommandHandler;
 import com.github.omwah.omcommands.PlayerSpecificCommand;
 
@@ -36,14 +37,18 @@ public class EventsResetCommand extends PlayerSpecificCommand {
         
         String event_name = args[1];
         
-        UUID playerUUID = Bukkit.getPlayer(player_name)!=null?Bukkit.getPlayer(player_name).getUniqueId():Bukkit.getOfflinePlayer(player_name).getUniqueId();
+        UUID playerUUID = Bukkit.getPlayer(player_name)!=null ? Bukkit.getPlayer(player_name).getUniqueId() : Bukkit.getOfflinePlayer(player_name).getUniqueId();
         
         // Look for matching event and award it
         for(GiftEvent gift_event : plugin.getEvents()) {
             if (gift_event.getName().matches(event_name)) {
                 plugin.getEventsInfo().setGiftGiven(gift_event, playerUUID, false);
                 plugin.getEventsInfo().setNumAnnoucementsMade(gift_event, playerUUID, 0);
-                sender.sendMessage("Reset gift status of event: " + gift_event.getName() + " for: " + player_name);
+                
+                if(gift_event instanceof IncrementalEvent) {
+                    plugin.getEventsInfo().resetLoginDates(playerUUID);
+                }
+                sender.sendMessage("Reset gift status of event " + gift_event.getName() + " for " + player_name);                
             }
         }
         

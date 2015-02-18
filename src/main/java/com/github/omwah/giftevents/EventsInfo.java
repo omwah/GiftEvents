@@ -1,6 +1,7 @@
 package com.github.omwah.giftevents;
 
 import com.github.omwah.giftevents.gevent.GiftEvent;
+import com.github.omwah.giftevents.gevent.IncrementalEvent;
 
 import java.io.File;
 import java.sql.Connection;
@@ -219,9 +220,11 @@ public class EventsInfo {
 
         Statement stmt = db_conn.createStatement();
 
+        String eventName = (event instanceof IncrementalEvent) ? ((IncrementalEvent)event).getDateName(playerUUID) : event.getName();
+        
         String count_query = 
                 "SELECT COUNT(*) FROM past_events WHERE " +
-                    "event_name = \"" + event.getName().toLowerCase() + "\" AND " +
+                    "event_name = \"" + eventName.toLowerCase() + "\" AND " +
                     "player = \"" + playerUUID.toString() + "\" AND " +
                     "year = " + now.get(Calendar.YEAR) + ";";
         ResultSet count_res = stmt.executeQuery(count_query);
@@ -232,7 +235,7 @@ public class EventsInfo {
                 "INSERT INTO past_events " +
                     "(event_name, year, player, gift_given, announcements_made) " +
                     "VALUES (" +
-                    "\"" + event.getName().toLowerCase() + "\", " +
+                    "\"" + eventName.toLowerCase() + "\", " +
                     now.get(Calendar.YEAR) + ", " +
                     "\"" + playerUUID.toString() + "\", " +
                     "0, 0);";
@@ -242,7 +245,7 @@ public class EventsInfo {
 
         String select_query = 
                 "SELECT * FROM past_events WHERE " +
-                    "event_name = \"" + event.getName() + "\" AND " +
+                    "event_name = \"" + eventName + "\" AND " +
                     "player = \"" + playerUUID.toString() + "\" AND " +
                     "year = " + now.get(Calendar.YEAR) + ";";
         ResultSet select_res = stmt.executeQuery(select_query);
@@ -276,16 +279,28 @@ public class EventsInfo {
      */
     public boolean setGiftGiven(GiftEvent event, UUID playerUUID, boolean given) {
         Calendar now = Calendar.getInstance();
-
+                 
         try {
-            int given_int = given ? 1 : 0;           
-            String update_query = 
-                    "UPDATE past_events " +
+            int given_int = given ? 1 : 0;
+            String eventName = (event instanceof IncrementalEvent) ? ((IncrementalEvent)event).getDateName(playerUUID) : event.getName();
+            String update_query = "";
+            
+            if(event instanceof IncrementalEvent && !given) {
+        	update_query = 
+        		"UPDATE past_events " + 
+        		"SET gift_given = " + given_int + " " + 
+        		"WHERE event_name LIKE \"" + event.getName() + "-%\" " +
+        		"AND player = \"" + playerUUID.toString() + "\" AND " +
+                        "year = " + now.get(Calendar.YEAR) + ";";
+            }else {            
+        	update_query = 
+        		"UPDATE past_events " +
                         "SET gift_given = " + given_int + " " +
                         "WHERE " +
-                        "event_name = \"" + event.getName() + "\" AND " +
+                        "event_name = \"" + eventName + "\" AND " +
                         "player = \"" + playerUUID.toString() + "\" AND " +
                         "year = " + now.get(Calendar.YEAR) + ";";
+            }
             Statement stmt = db_conn.createStatement();
             stmt.executeUpdate(update_query);
             stmt.close();
@@ -324,12 +339,14 @@ public class EventsInfo {
     public boolean setNumAnnoucementsMade(GiftEvent event, UUID playerUUID, int numMade) {
         Calendar now = Calendar.getInstance();
 
+        String eventName = (event instanceof IncrementalEvent) ? ((IncrementalEvent)event).getDateName(playerUUID) : event.getName();
+                
         try {
             String update_query = 
                     "UPDATE past_events " +
                         "SET announcements_made = " + numMade + " " +
                         "WHERE " +
-                        "event_name = \"" + event.getName() + "\" AND " +
+                        "event_name = \"" + eventName + "\" AND " +
                         "player = \"" + playerUUID.toString() + "\" AND " +
                         "year = " + now.get(Calendar.YEAR) + ";";
             Statement stmt = db_conn.createStatement();           
@@ -421,27 +438,18 @@ public class EventsInfo {
 	return loginDates;	
     }
     
-    public List<UUID> getAllPlayers() {
-	List<UUID> playerList = new ArrayList<UUID>();
+    public boolean resetLoginDates(UUID playerUUID) {
 	
 	try {
 	    Statement stmt = db_conn.createStatement();
 	    
-	    String select_query = "SELECT * FROM logins;";
-	    ResultSet rs = stmt.executeQuery(select_query);
-	    
-	    if(rs!=null) {
-		while(rs.next()) {
-		    playerList.add(UUID.fromString(rs.getString("player")));
-		}
-	    }
-	    
+	    String delete_query = "DELETE FROM logins WHERE player=\"" + playerUUID.toString() + "\";";
+	    stmt.executeUpdate(delete_query);
+	    return true;
 	}catch(SQLException ex) {
-	    logger.log(Level.SEVERE, "Failed to get login dates from table!");
-            logger.log(Level.SEVERE, ex.toString());
-            return null;
+	    logger.log(Level.SEVERE, "Failed to get login dates for player " + playerUUID.toString() + "!");
+            logger.log(Level.SEVERE, ex.toString());          
 	}
-	
-	return playerList;
+	return false;
     }
 }
