@@ -66,10 +66,12 @@ public class EventsInfoCommand extends PlayerSpecificCommand {
                     sender.sendMessage(ChatColor.GRAY + "Date: " + ChatColor.WHITE + display_format.format(cal.getTime()));
                 }
                 
-                sender.sendMessage(ChatColor.GRAY + "Gifts: ");
-                for(ItemStack item : gift_event.getGifts().getItems()) {
-                    // Use ItemStack toString but clean it up a bit
-                    sender.sendMessage("- " + item.toString().replace("ItemStack{", "").replaceAll("}$", ""));
+                if(gift_event.getGifts()!=null) { // in case of incremental events
+                    sender.sendMessage(ChatColor.GRAY + "Gifts: ");
+                    for(ItemStack item : gift_event.getGifts().getItems()) {
+                        // Use ItemStack toString but clean it up a bit
+                        sender.sendMessage("- " + item.toString().replace("ItemStack{", "").replaceAll("}$", ""));
+                    }    
                 }
                 
                 if (admin_output) {
