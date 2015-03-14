@@ -393,8 +393,7 @@ public class EventsInfo {
 	if(logedInOn(playerUUID, now)) {
 	    return false;
 	}
-	//INSERT INTO past_events (event_name, year, player, gift_given, announcements_made) VALUES("event.getName()", "now.get(Calendar.YEAR)", "playerUUID", 0, 0);
-	//(player STRING PRIMARY KEY, month INT, day INT, year INT)
+	
 	try {
 	    Statement stmt = db_conn.createStatement();
 	    
@@ -412,6 +411,9 @@ public class EventsInfo {
 	return false;
     }
     
+    /*
+     * Get login dates as list for given userid
+     */
     public List<Calendar> getLoginDates(UUID playerUUID) {
 	
 	List<Calendar> loginDates = new ArrayList<Calendar>(); 
@@ -438,6 +440,9 @@ public class EventsInfo {
 	return loginDates;	
     }
     
+    /*
+     * Remove login dates for the given userid
+     */
     public boolean resetLoginDates(UUID playerUUID) {
 	
 	try {
