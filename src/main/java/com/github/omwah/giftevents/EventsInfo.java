@@ -220,11 +220,11 @@ public class EventsInfo {
 
         Statement stmt = db_conn.createStatement();
 
-        String eventName = (event instanceof IncrementalEvent) ? ((IncrementalEvent)event).getDateName(playerUUID) : event.getName();
+        String eventName = (event instanceof IncrementalEvent) ? ((IncrementalEvent)event).getDateName(playerUUID).toLowerCase() : event.getName().toLowerCase();
         
         String count_query = 
                 "SELECT COUNT(*) FROM past_events WHERE " +
-                    "event_name = \"" + eventName.toLowerCase() + "\" AND " +
+                    "event_name = \"" + eventName + "\" AND " +
                     "player = \"" + playerUUID.toString() + "\" AND " +
                     "year = " + now.get(Calendar.YEAR) + ";";
         ResultSet count_res = stmt.executeQuery(count_query);
@@ -235,7 +235,7 @@ public class EventsInfo {
                 "INSERT INTO past_events " +
                     "(event_name, year, player, gift_given, announcements_made) " +
                     "VALUES (" +
-                    "\"" + eventName.toLowerCase() + "\", " +
+                    "\"" + eventName + "\", " +
                     now.get(Calendar.YEAR) + ", " +
                     "\"" + playerUUID.toString() + "\", " +
                     "0, 0);";
@@ -282,17 +282,18 @@ public class EventsInfo {
                  
         try {
             int given_int = given ? 1 : 0;
-            String eventName = (event instanceof IncrementalEvent) ? ((IncrementalEvent)event).getDateName(playerUUID) : event.getName();
+            String eventName = (event instanceof IncrementalEvent) ? ((IncrementalEvent)event).getDateName(playerUUID).toLowerCase() : event.getName().toLowerCase();
             String update_query = "";
-            
-            if(event instanceof IncrementalEvent && !given) {
+            // System.out.println("setGiftgiven for " + eventName + " to " + given_int + " with " + playerUUID.toString() + " ie: " + (event instanceof IncrementalEvent));
+         
+            if((event instanceof IncrementalEvent) && !given) {
         	update_query = 
         		"UPDATE past_events " + 
         		"SET gift_given = " + given_int + " " + 
-        		"WHERE event_name LIKE \"" + event.getName() + "-%\" " +
+        		"WHERE event_name LIKE \"" + event.getName().toLowerCase() + "-%\" " +
         		"AND player = \"" + playerUUID.toString() + "\" AND " +
                         "year = " + now.get(Calendar.YEAR) + ";";
-            }else {            
+            }else {
         	update_query = 
         		"UPDATE past_events " +
                         "SET gift_given = " + given_int + " " +
@@ -301,6 +302,7 @@ public class EventsInfo {
                         "player = \"" + playerUUID.toString() + "\" AND " +
                         "year = " + now.get(Calendar.YEAR) + ";";
             }
+            // System.out.println(update_query);
             Statement stmt = db_conn.createStatement();
             stmt.executeUpdate(update_query);
             stmt.close();
