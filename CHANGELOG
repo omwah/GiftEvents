@@ -1,3 +1,7 @@
+2.4.1
+-----
+* Fixed item spamming bug caused by uppercase event names 
+
 2.4
 -----
 * Added incremental events
