@@ -19,13 +19,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.bukkit.OfflinePlayer;
-import org.bukkit.plugin.java.JavaPlugin;
 
 /*
  * Keeps track of past events using a SQLite database
  */
 public class EventsInfo {
-    private final JavaPlugin plugin;
+    private final GiftEventsPlugin plugin;
     private final Connection db_conn;
     private final Logger logger;
     private final boolean first_join_gift;
@@ -33,7 +32,7 @@ public class EventsInfo {
     /*
      * Creates a new instance at the given filename, prefix should be the Plugin's name  
      */
-    public EventsInfo(JavaPlugin plugin, File filename, boolean firstJoinGift) throws SQLException, ClassNotFoundException {
+    public EventsInfo(GiftEventsPlugin plugin, File filename, boolean firstJoinGift) throws SQLException, ClassNotFoundException {
         this.plugin = plugin;
         this.logger = plugin.getLogger();
         this.first_join_gift = firstJoinGift;
@@ -69,7 +68,7 @@ public class EventsInfo {
             
             rs = stmt.executeQuery("SELECT name FROM sqlite_master WHERE type='table' AND name='logins';");
             if(!rs.next()) {
-                stmt.executeUpdate("CREATE TABLE logins (player STRING, month INT, day INT, year INT);");
+                stmt.executeUpdate("CREATE TABLE logins (player STRING, month INT, day INT, year INT, PRIMARY KEY(player, month, day));");
             }
             rs.close();
             
@@ -172,30 +171,6 @@ public class EventsInfo {
     }
     
     /*
-     * Gets the player first played date
-     */
-    public Calendar getFirstPlayedDate(OfflinePlayer playerObj) {
-    	if(playerObj!=null) {
-	        Calendar fp_cal = Calendar.getInstance();
-	        Calendar now = Calendar.getInstance();
-	        fp_cal.setTime(new Date(playerObj.getFirstPlayed()));
-	        
-	        // Don't return date if the player has just joined the server
-	        // prevents them from getting gifts when they first join
-	        if(!first_join_gift &&
-	           now.get(Calendar.MONTH) ==  fp_cal.get(Calendar.MONTH) &&
-	           now.get(Calendar.DAY_OF_MONTH) ==  fp_cal.get(Calendar.DAY_OF_MONTH) &&
-	           now.get(Calendar.YEAR) == fp_cal.get(Calendar.YEAR)) {
-	            return null;
-	        } else {
-	            return fp_cal;
-	        }
-    	}else {
-    		return null;
-    	}
-    }
-
-    /*
      * Get the first played date for a player based on their UUID
      */
     public Calendar getFirstPlayedDate(UUID playerUUID) {
@@ -212,6 +187,50 @@ public class EventsInfo {
         }
     }
     
+    /*
+     * Gets the player first played date
+     */
+    public Calendar getFirstPlayedDate(OfflinePlayer playerObj) {
+    	if(playerObj!=null) {
+	        Calendar fp_cal = Calendar.getInstance();
+	        Calendar now = Calendar.getInstance();
+	        fp_cal.setTime(new Date(playerObj.getFirstPlayed()));
+	        
+	        // Don't return date if the player has just joined the server
+	        // prevents them from getting gifts when they first join
+	        
+//	        SimpleDateFormat f = new SimpleDateFormat("d:M:Y");
+//	        
+//	        System.out.println(f.format(now.getTime()));
+//	        System.out.println("join: " + f.format(fp_cal.getTime()));
+//	        System.out.println(getLoginDates(playerObj.getUniqueId()).size());
+//	        
+//	        if(now.get(Calendar.MONTH) == fp_cal.get(Calendar.MONTH) &&
+//	        	now.get(Calendar.DAY_OF_MONTH) ==  fp_cal.get(Calendar.DAY_OF_MONTH) &&
+//	        	now.get(Calendar.YEAR) == fp_cal.get(Calendar.YEAR)) {
+//	            System.out.println("same date");
+//	            System.out.println("first_join: " + first_join_gift);
+//	        }
+//	        
+	        if(first_join_gift==false) {
+	            if(now.get(Calendar.MONTH) == fp_cal.get(Calendar.MONTH) &&
+	 	       now.get(Calendar.DAY_OF_MONTH) == fp_cal.get(Calendar.DAY_OF_MONTH) &&
+		       now.get(Calendar.YEAR) == fp_cal.get(Calendar.YEAR)) {
+	        
+	        	if(getLoginDates(playerObj.getUniqueId()).size()<2) {
+//	        	    System.out.println("return null 1");
+	        	    setGiftGiven(plugin.getAnniversaryEvent(), playerObj.getUniqueId(), true);
+	        	    return null;
+	        	}
+	            }
+	        }
+	        
+	        return fp_cal;
+    	}else {
+    	    return null;
+    	}
+    }
+
     /*
      * Helper to retrieve the proper past events row
      */

@@ -223,6 +223,18 @@ public class GiftEventsPlugin extends JavaPlugin {
     }
 
     /*
+     * Get the AnniversaryEvent
+     */
+    public AnniversaryEvent getAnniversaryEvent() {
+	for(GiftEvent event : getEvents()) {
+	    if(event instanceof AnniversaryEvent) {
+		return (AnniversaryEvent)event;
+	    }
+	}
+	return null;
+    }
+    
+    /*
      * Return the date format specified in the configuration file for inputting values
      */
     public SimpleDateFormat getInputDateFormat() {
