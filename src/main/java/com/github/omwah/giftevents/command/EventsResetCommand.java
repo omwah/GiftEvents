@@ -37,7 +37,7 @@ public class EventsResetCommand extends PlayerSpecificCommand {
         
         String event_name = args[1];
         
-        UUID playerUUID = Bukkit.getPlayer(player_name)!=null ? Bukkit.getPlayer(player_name).getUniqueId() : Bukkit.getOfflinePlayer(player_name).getUniqueId();
+        UUID playerUUID = Bukkit.getOfflinePlayer(player_name).getUniqueId();
         
         // Look for matching event and award it
         for(GiftEvent gift_event : plugin.getEvents()) {
